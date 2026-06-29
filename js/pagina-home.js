@@ -5,7 +5,7 @@
 import { auth, garantirLogin, updateProfile } from "./firebase-config.js";
 import {
   criarCampanha, buscarCampanhaPorCodigo, entrarNaCampanha,
-  listarFichasDoUsuario, salvarFicha
+  listarFichasDoUsuario, salvarFicha, listarCampanhasDoMestre
 } from "./store.js";
 import { criarFichaVazia } from "./modelo-ficha.js";
 import { mostrarToast, escaparHtml } from "./ui-utils.js";
@@ -57,6 +57,7 @@ function configurarTelaEntrada(user) {
 
 async function configurarTelaLogada(user, nome) {
   carregarFichasDoUsuario(user.uid);
+  carregarCampanhasDoUsuario(user.uid);
 
   document.getElementById("btn-criar-campanha").addEventListener("click", async () => {
     const nomeInput = document.getElementById("input-nome-campanha");
@@ -132,6 +133,37 @@ async function carregarFichasDoUsuario(uid) {
   } catch (err) {
     console.error(err);
     container.innerHTML = `<p class="texto-discreto">Não foi possível carregar suas fichas.</p>`;
+  }
+}
+
+async function carregarCampanhasDoUsuario(uid) {
+  const container = document.getElementById("lista-campanhas-usuario");
+  try {
+    const campanhas = await listarCampanhasDoMestre(uid);
+    if (campanhas.length === 0) {
+      container.innerHTML = `<p class="texto-discreto">Você ainda não é Mestre de nenhuma campanha. Crie uma campanha acima.</p>`;
+      return;
+    }
+    container.innerHTML = "";
+    campanhas
+      .sort((a, b) => (b.atualizadoEm?.seconds || 0) - (a.atualizadoEm?.seconds || 0))
+      .forEach((campanha) => {
+        const a = document.createElement("a");
+        a.href = `mestre.html?campanha=${campanha.id}`;
+        a.className = "item-ficha-usuario";
+        const qtdMembros = (campanha.membros || []).length;
+        a.innerHTML = `
+          <span>
+            <span class="item-ficha-usuario-nome">${escaparHtml(campanha.nome)}</span><br>
+            <span class="item-ficha-usuario-meta">${qtdMembros} jogador${qtdMembros === 1 ? "" : "es"} · código ${escaparHtml(campanha.codigoConvite)}</span>
+          </span>
+          <span class="pill">Rodada ${campanha.rodadaAtual || 1}</span>
+        `;
+        container.appendChild(a);
+      });
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p class="texto-discreto">Não foi possível carregar suas campanhas.</p>`;
   }
 }
 

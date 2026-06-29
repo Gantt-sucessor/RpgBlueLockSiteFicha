@@ -47,6 +47,8 @@ function criarFichaVazia({ nomeJogador = "", uid = "" } = {}) {
     pericias: [], // [{ jogadaId, tipo: 'unica'|'dupla' }]
     singularidadeMaxima: "",
 
+    historicoRolagens: [], // [{ titulo, total, vantagens, desvantagens, bonus, execucao, quando }]
+
     // Habilidades/cooldowns rastreados nesta ficha (preenchido ao escolher classe)
     cooldowns: [], // [{ id, nome, origem, cooldownMax, cooldownAtual }]
 
@@ -66,7 +68,8 @@ function normalizarFicha(ficha) {
     fluxoPDgastos: { ...base.fluxoPDgastos, ...(ficha.fluxoPDgastos || {}) },
     talentosImpetuosos: ficha.talentosImpetuosos || [],
     pericias: ficha.pericias || [],
-    cooldowns: ficha.cooldowns || []
+    cooldowns: ficha.cooldowns || [],
+    historicoRolagens: ficha.historicoRolagens || []
   };
 }
 

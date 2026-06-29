@@ -98,6 +98,18 @@
   color: var(--cinza-escuro);
 }
 
+.card-ficha-jogador-rolagem {
+  font-size: 0.82rem;
+  background: var(--cinza-claro);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+.card-ficha-jogador-rolagem-total {
+  font-family: var(--fonte-display);
+  font-size: 1.1rem;
+  color: var(--azul-marinho);
+}
+
 .card-ficha-jogador a.btn { margin-top: auto; }
 
 @media (max-width: 560px) {

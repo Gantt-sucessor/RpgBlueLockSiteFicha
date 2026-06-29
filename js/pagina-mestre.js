@@ -138,10 +138,25 @@ function renderizarGridFichas(fichasMap) {
           ? `🕒 Em cooldown: ${cooldownsAtivos.map(c => `${escaparHtml(c.nome)} (${c.cooldownAtual})`).join(", ")}`
           : "✅ Todas habilidades prontas"}
       </div>
+      ${renderizarUltimaRolagem(ficha.historicoRolagens)}
       <a href="ficha.html?id=${ficha.id}&campanha=${campanhaId}" class="btn btn-secundario btn-pequeno">Ver ficha completa</a>
     `;
     container.appendChild(card);
   });
+}
+
+function renderizarUltimaRolagem(historico) {
+  if (!historico || historico.length === 0) {
+    return `<div class="card-ficha-jogador-rolagem texto-discreto">Ainda não rolou dados.</div>`;
+  }
+  const ultima = historico[0];
+  const hora = new Date(ultima.quando).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  return `
+    <div class="card-ficha-jogador-rolagem">
+      🎲 <strong>${escaparHtml(ultima.titulo)}</strong>: <span class="card-ficha-jogador-rolagem-total">${ultima.total}</span>
+      <span class="texto-discreto">(${ultima.vantagens}V/${ultima.desvantagens}D · ${hora}${ultima.execucao ? ` · ⚡${escaparHtml(ultima.execucao)}` : ""})</span>
+    </div>
+  `;
 }
 
 async function aoClicarPassarRodada() {

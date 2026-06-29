@@ -104,6 +104,7 @@
 .bloco-hexagono { grid-row: span 2; text-align: center; }
 .bloco-jogadas-rapidas { grid-column: 2; }
 .bloco-cooldowns { grid-column: 2; }
+.bloco-historico { grid-column: 2; }
 
 .grid-2-col {
   display: grid;
@@ -114,7 +115,7 @@
 @media (max-width: 920px) {
   .grid-visao-geral { grid-template-columns: 1fr; }
   .bloco-hexagono { grid-row: auto; }
-  .bloco-jogadas-rapidas, .bloco-cooldowns { grid-column: 1; }
+  .bloco-jogadas-rapidas, .bloco-cooldowns, .bloco-historico { grid-column: 1; }
   .grid-2-col { grid-template-columns: 1fr; }
 }
 
@@ -198,6 +199,16 @@
 .item-jogada:active { transform: scale(0.98); }
 .item-jogada-nome { font-weight: 700; color: var(--azul-marinho); display: block; margin-bottom: 4px; }
 .item-jogada-meta { font-size: 0.76rem; color: var(--cinza-escuro); display: block; }
+.item-jogada-auto {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--sucesso);
+  background: #e6f4ec;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
 
 /* --- Cooldowns --- */
 .bloco-cooldowns-header {
@@ -231,6 +242,68 @@
   text-align: center;
 }
 .item-cooldown.pronto .item-cooldown-badge { background: var(--sucesso); }
+
+/* --- Histórico de Rolagens --- */
+.lista-historico-rolagens {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.item-historico-rolagem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 2px 10px;
+  padding: 10px 12px;
+  background: var(--cinza-claro);
+  border-radius: var(--radius-md);
+}
+.item-historico-titulo {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--azul-marinho);
+}
+.item-historico-total {
+  grid-row: 1;
+  grid-column: 2;
+  font-family: var(--fonte-display);
+  font-size: 1.4rem;
+  color: var(--azul-marinho);
+  justify-self: end;
+}
+.item-historico-total.com-execucao { color: var(--aviso); }
+.item-historico-meta {
+  grid-column: 1 / -1;
+  font-size: 0.74rem;
+  color: var(--cinza-escuro);
+}
+
+/* --- Caixa de bônus automático no modal de rolagem --- */
+.bonus-automatico-box {
+  background: #e6f4ec;
+  border: 1px solid #b8e0c8;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+}
+.bonus-automatico-box strong { color: var(--sucesso); }
+.bonus-automatico-box ul { margin: 6px 0 0; padding-left: 18px; }
+.bonus-automatico-box li { margin-bottom: 2px; }
+
+/* --- Seletor de cor compacto (dentro do modal de rolagem) --- */
+.seletor-cor-ego-compacto { gap: 6px; }
+.opcao-cor-ego-pequena {
+  padding: 6px 10px;
+  min-width: auto;
+  flex-direction: row;
+  gap: 5px;
+}
+.opcao-cor-ego-pequena .opcao-cor-ego-amostra { width: 16px; height: 16px; }
+.opcao-cor-ego-pequena .opcao-cor-ego-nome { font-size: 0.76rem; }
 
 /* --- Classes / Essências / Talentos: cards de detalhe --- */
 .detalhe-habilidade {

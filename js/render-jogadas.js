@@ -2,9 +2,10 @@
 // FÓRMULA DO EGO — Renderização: Jogadas, Cooldowns, Resultado de Rolagem
 // ============================================================
 
-import { JOGADAS_BASE, ATRIBUTOS } from "./data/regras-base.js";
+import { JOGADAS_BASE, ATRIBUTOS, CORES_EGO, COR_EGO_HEX, JOGADAS_COR_EGO } from "./data/regras-base.js";
 import { rolarJogada } from "./engine-regras.js";
 import { abrirModal } from "./ui-utils.js";
+import { calcularBonusAutomatico } from "./bonus-automaticos.js";
 
 function nomeAtributoComposto(atrId) {
   if (atrId === "destreza_potencia_meio") return "Destreza + Potência ÷ 2";
@@ -25,9 +26,11 @@ function renderizarListaJogadas(container, ficha, { onRolar }) {
     const div = document.createElement("div");
     div.className = "item-jogada";
     div.tabIndex = 0;
+    const automatico = calcularBonusAutomatico(jogada.id, ficha);
     div.innerHTML = `
       <span class="item-jogada-nome">${jogada.nome}</span>
       <span class="item-jogada-meta">${nomeAtributoComposto(jogada.atributo)} · DJ ${typeof jogada.dj === "number" ? jogada.dj : jogada.dj}</span>
+      ${automatico.vantagens > 0 ? `<span class="item-jogada-auto">+${automatico.vantagens}V automático</span>` : ""}
     `;
     div.addEventListener("click", () => onRolar(jogada));
     div.addEventListener("keydown", (e) => { if (e.key === "Enter") onRolar(jogada); });
@@ -35,16 +38,36 @@ function renderizarListaJogadas(container, ficha, { onRolar }) {
   });
 }
 
-// Abre o modal de configuração + resultado de uma rolagem
-function abrirModalRolagem({ titulo, atributoValor, vantagensIniciais = 0, desvantagensIniciais = 0, bonusInicial = 0 }) {
+// Abre o modal de configuração + resultado de uma rolagem.
+// jogadaId + ficha são opcionais: quando informados, pré-calcula os bônus
+// automáticos de todas as fontes (Classe, Perícias gerais, Cor de Ego).
+function abrirModalRolagem({ titulo, atributoValor, jogadaId, ficha, vantagensIniciais = 0, desvantagensIniciais = 0, bonusInicial = 0, registrarRolagem }) {
+  const automatico = (jogadaId && ficha) ? calcularBonusAutomatico(jogadaId, ficha) : { vantagens: 0, desvantagens: 0, bonus: 0, fontes: [], elegivelParaCorEgo: false };
+
+  let vant = vantagensIniciais + automatico.vantagens;
+  let desv = desvantagensIniciais + automatico.desvantagens;
+  let corOponenteSelecionada = "";
+
   const wrap = document.createElement("div");
   wrap.innerHTML = `
+    ${automatico.fontes.length > 0 ? `
+      <div class="bonus-automatico-box">
+        <strong>Já incluso automaticamente:</strong>
+        <ul>${automatico.fontes.map(f => `<li>${f}</li>`).join("")}</ul>
+      </div>
+    ` : ""}
+    ${automatico.elegivelParaCorEgo ? `
+      <div class="form-grupo">
+        <label>Cor de Ego do oponente (se souber)</label>
+        <div id="seletor-cor-oponente" class="seletor-cor-ego seletor-cor-ego-compacto"></div>
+      </div>
+    ` : ""}
     <div class="form-grupo">
-      <label>Vantagens</label>
+      <label>Vantagens totais</label>
       <div class="stepper" id="stepper-vant"></div>
     </div>
     <div class="form-grupo">
-      <label>Desvantagens</label>
+      <label>Desvantagens totais</label>
       <div class="stepper" id="stepper-desv"></div>
     </div>
     <div class="form-grupo">
@@ -57,20 +80,59 @@ function abrirModalRolagem({ titulo, atributoValor, vantagensIniciais = 0, desva
 
   const { fechar, body } = abrirModal({ titulo, conteudoEl: wrap });
 
-  // Steppers simples sem o helper (pra não duplicar import circular)
-  let vant = vantagensIniciais, desv = desvantagensIniciais;
   const stepperVant = wrap.querySelector("#stepper-vant");
   const stepperDesv = wrap.querySelector("#stepper-desv");
   montarStepperLocal(stepperVant, vant, (v) => vant = v);
   montarStepperLocal(stepperDesv, desv, (v) => desv = v);
 
+  // Seletor de cor do oponente: ao escolher, recalcula o automático e
+  // atualiza o stepper de vantagens (soma/remove o +1 da Cor de Ego)
+  if (automatico.elegivelParaCorEgo) {
+    const seletorCor = wrap.querySelector("#seletor-cor-oponente");
+    montarSeletorCorCompacto(seletorCor, (corEscolhida) => {
+      const novoCalculo = calcularBonusAutomatico(jogadaId, ficha, { corOponente: corEscolhida });
+      const diferenca = novoCalculo.vantagens - automatico.vantagens;
+      vant += diferenca;
+      automatico.vantagens = novoCalculo.vantagens;
+      montarStepperLocal(stepperVant, vant, (v) => vant = v);
+    });
+  }
+
   wrap.querySelector("#btn-confirmar-rolagem").addEventListener("click", () => {
     const bonus = parseInt(wrap.querySelector("#input-bonus").value, 10) || 0;
     const resultado = rolarJogada({ atributoValor, vantagens: vant, desvantagens: desv, bonus });
     renderizarResultadoRolagem(wrap.querySelector("#area-resultado"), resultado);
+    if (registrarRolagem) registrarRolagem({ titulo, resultado });
   });
 
   return { fechar };
+}
+
+// Versão compacta do seletor de cor (usado dentro do modal de rolagem,
+// sem mostrar a explicação de "vantagem sobre" para não poluir o modal)
+function montarSeletorCorCompacto(container, onEscolher) {
+  container.innerHTML = "";
+  const nenhuma = document.createElement("div");
+  nenhuma.className = "opcao-cor-ego opcao-cor-ego-pequena selecionada";
+  nenhuma.textContent = "Não sei";
+  nenhuma.dataset.cor = "";
+  container.appendChild(nenhuma);
+
+  CORES_EGO.forEach((cor) => {
+    const div = document.createElement("div");
+    div.className = "opcao-cor-ego opcao-cor-ego-pequena";
+    div.dataset.cor = cor;
+    div.innerHTML = `<span class="opcao-cor-ego-amostra" style="background:${COR_EGO_HEX[cor]}"></span><span class="opcao-cor-ego-nome">${cor}</span>`;
+    container.appendChild(div);
+  });
+
+  container.querySelectorAll(".opcao-cor-ego-pequena").forEach((el) => {
+    el.addEventListener("click", () => {
+      container.querySelectorAll(".opcao-cor-ego-pequena").forEach(e => e.classList.remove("selecionada"));
+      el.classList.add("selecionada");
+      onEscolher(el.dataset.cor);
+    });
+  });
 }
 
 function montarStepperLocal(container, valorInicial, onChange) {

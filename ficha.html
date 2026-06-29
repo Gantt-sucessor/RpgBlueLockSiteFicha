@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ficha — Fórmula do Ego</title>
+  <meta name="theme-color" content="#0d2c6b">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/hexagono.css">
+  <link rel="stylesheet" href="css/ficha.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div id="tela-loading" class="tela-loading">
+    <div class="spinner"></div>
+    <p>Carregando ficha...</p>
+  </div>
+
+  <div id="app-ficha" hidden>
+
+    <header class="ficha-topbar">
+      <div class="container ficha-topbar-inner">
+        <a href="index.html" class="ficha-voltar" aria-label="Voltar ao início">←</a>
+        <div class="ficha-topbar-titulo">
+          <span class="editavel" id="campo-nome-personagem" contenteditable="true" tabindex="0">Novo Jogador</span>
+          <span class="ficha-topbar-sub" id="campo-classe-atual">Sem classe</span>
+        </div>
+        <div class="ficha-topbar-extra">
+          <span class="pill" id="pill-campanha-vinculada" hidden></span>
+          <span class="pill" id="pill-rodada-atual" hidden>Rodada 1</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="ficha-abas" id="ficha-abas">
+      <button class="ficha-aba ativa" data-aba="visao-geral">Visão Geral</button>
+      <button class="ficha-aba" data-aba="classe">Classe &amp; Habilidades</button>
+      <button class="ficha-aba" data-aba="ego">Ego &amp; Essência</button>
+      <button class="ficha-aba" data-aba="talentos">Talentos</button>
+      <button class="ficha-aba" data-aba="fluxo">Fluxo</button>
+      <button class="ficha-aba" data-aba="anotacoes">Anotações</button>
+    </nav>
+
+    <main class="container ficha-conteudo">
+
+      <!-- ===== ABA: VISÃO GERAL ===== -->
+      <section class="painel-aba ativa" id="aba-visao-geral">
+        <div class="grid-visao-geral">
+
+          <div class="card bloco-hexagono">
+            <h3>Atributos</h3>
+            <p class="texto-discreto">Clique numa ponta pra rolar. Clique no número pra editar.</p>
+            <div class="hexagono-wrap" id="wrap-hexagono"></div>
+          </div>
+
+          <div class="card bloco-status">
+            <h3>Status</h3>
+
+            <div class="status-linha">
+              <span class="status-label">Tokens de Ego</span>
+              <div id="wrap-tokens-ego"></div>
+              <span class="status-extra" id="texto-limite-tokens"></span>
+            </div>
+
+            <div class="status-linha">
+              <span class="status-label">Fôlego</span>
+              <div id="wrap-folego"></div>
+              <span class="status-extra" id="texto-max-folego"></span>
+            </div>
+
+            <div class="status-linha">
+              <span class="status-label">Pontos de Chama</span>
+              <div id="wrap-pontos-chama"></div>
+            </div>
+
+            <div class="status-linha">
+              <span class="status-label">Estágio</span>
+              <select id="select-estagio" class="select-estagio">
+                <option value="iniciante">Iniciante</option>
+                <option value="intermediario">Intermediário</option>
+                <option value="profissional">Profissional</option>
+                <option value="mestre">Mestre</option>
+              </select>
+            </div>
+
+            <div class="status-linha">
+              <span class="status-label">Cor de Ego</span>
+              <div id="wrap-cor-ego"></div>
+            </div>
+
+            <hr class="divisor">
+
+            <div class="status-toggle-linha">
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-ego-inflado">
+                <span class="toggle-slider"></span>
+              </label>
+              <span>Ego Inflado <span class="texto-discreto">(+1 Vantagem num atributo + Singularidade Máxima passiva)</span></span>
+            </div>
+            <div class="status-toggle-linha">
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-quebra-ego">
+                <span class="toggle-slider"></span>
+              </label>
+              <span>Quebra de Ego <span class="texto-discreto">(2 Desvantagens, -3 Fôlegos, -2 Bônus)</span></span>
+            </div>
+          </div>
+
+          <div class="card bloco-jogadas-rapidas">
+            <h3>Jogadas</h3>
+            <p class="texto-discreto">Distância de Chute: <strong id="texto-dist-chute">—</strong> · Distância de Passe: <strong id="texto-dist-passe">—</strong></p>
+            <div id="lista-jogadas-base" class="lista-jogadas"></div>
+          </div>
+
+          <div class="card bloco-cooldowns">
+            <div class="bloco-cooldowns-header">
+              <h3>Cooldowns Ativos</h3>
+              <button class="btn btn-primario btn-pequeno" id="btn-passar-rodada" hidden>Passar Rodada</button>
+            </div>
+            <div id="lista-cooldowns" class="lista-cooldowns">
+              <p class="texto-discreto">Nenhuma habilidade em recarga.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== ABA: CLASSE ===== -->
+      <section class="painel-aba" id="aba-classe">
+        <div class="card" style="margin-bottom:16px;">
+          <h3>Categoria &amp; Classe</h3>
+          <div class="grid-2-col">
+            <div class="form-grupo">
+              <label for="select-categoria">Categoria Principal</label>
+              <select id="select-categoria">
+                <option value="">— Escolher —</option>
+                <option value="genio">Gênio</option>
+                <option value="aprendiz">Aprendiz</option>
+              </select>
+            </div>
+            <div class="form-grupo">
+              <label for="select-subcategoria">Sub-Categoria</label>
+              <select id="select-subcategoria">
+                <option value="">— Escolher categoria primeiro —</option>
+              </select>
+            </div>
+          </div>
+          <div id="detalhe-categoria"></div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+          <h3>Classe</h3>
+          <div class="form-grupo">
+            <label for="select-classe">Escolha sua Classe</label>
+            <select id="select-classe">
+              <option value="">— Escolher —</option>
+            </select>
+          </div>
+          <div id="detalhe-classe"></div>
+        </div>
+
+        <div class="card" id="card-singularidade" hidden>
+          <h3>Singularidade Máxima</h3>
+          <p class="texto-discreto">Liberada no Estágio Mestre.</p>
+          <div class="form-grupo">
+            <label for="select-singularidade">Escolha sua Singularidade</label>
+            <select id="select-singularidade">
+              <option value="">— Escolher —</option>
+            </select>
+          </div>
+          <div id="detalhe-singularidade"></div>
+        </div>
+      </section>
+
+      <!-- ===== ABA: EGO / ESSÊNCIA ===== -->
+      <section class="painel-aba" id="aba-ego">
+        <div class="card" style="margin-bottom:16px;">
+          <h3>Cor de Ego</h3>
+          <div id="seletor-cor-ego" class="seletor-cor-ego"></div>
+        </div>
+        <div class="card">
+          <h3>Essência de Ego</h3>
+          <div class="form-grupo">
+            <label for="select-essencia">Escolha sua Essência</label>
+            <select id="select-essencia">
+              <option value="">— Escolher —</option>
+            </select>
+          </div>
+          <div id="detalhe-essencia"></div>
+        </div>
+      </section>
+
+      <!-- ===== ABA: TALENTOS ===== -->
+      <section class="painel-aba" id="aba-talentos">
+        <div class="card" style="margin-bottom:16px;">
+          <div class="bloco-cooldowns-header">
+            <h3>Talentos Impetuosos</h3>
+            <span class="pill" id="pill-talentos-contagem">0 / 5</span>
+          </div>
+          <p class="texto-discreto">Cada Talento custa Pontos de Chama por Nível (máx. Nível 3). Limite de 5 talentos na ficha.</p>
+          <button class="btn btn-primario btn-pequeno" id="btn-add-talento">+ Adicionar Talento</button>
+        </div>
+        <div id="lista-talentos-escolhidos"></div>
+      </section>
+
+      <!-- ===== ABA: FLUXO ===== -->
+      <section class="painel-aba" id="aba-fluxo">
+        <div class="card" style="margin-bottom:16px;">
+          <h3>Barra de Fluxo</h3>
+          <div class="fluxo-barra-wrap">
+            <div class="barra-progresso"><div class="barra-progresso-fill" id="barra-fluxo-fill"></div></div>
+            <div id="wrap-fluxo-porcentagem"></div>
+          </div>
+          <p class="texto-discreto" id="texto-porcentagens-fluxo"></p>
+        </div>
+        <div class="card">
+          <h3>Habilidade de Fluxo</h3>
+          <div id="detalhe-fluxo-habilidade"></div>
+        </div>
+      </section>
+
+      <!-- ===== ABA: ANOTAÇÕES ===== -->
+      <section class="painel-aba" id="aba-anotacoes">
+        <div class="card">
+          <h3>Anotações Livres</h3>
+          <textarea id="campo-anotacoes" rows="14" placeholder="Histórico, equipamentos, inventário, observações da mesa..."></textarea>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="modal-rolagem-resultado"></div>
+
+  <script type="module" src="js/pagina-ficha.js"></script>
+</body>
+</html>

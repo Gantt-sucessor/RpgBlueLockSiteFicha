@@ -1,0 +1,404 @@
+/* ============================================================
+   FÓRMULA DO EGO — Página de Ficha
+   ============================================================ */
+
+.ficha-topbar {
+  background: var(--azul-marinho);
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.ficha-topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ficha-voltar {
+  color: var(--branco);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+}
+.ficha-voltar:hover { background: rgba(255,255,255,0.12); }
+
+.ficha-topbar-titulo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+#campo-nome-personagem {
+  color: var(--branco);
+  font-family: var(--fonte-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#campo-nome-personagem:hover,
+#campo-nome-personagem:focus {
+  background: rgba(255,255,255,0.12);
+  outline: none;
+}
+.ficha-topbar-sub {
+  color: var(--cinza-medio);
+  font-size: 0.78rem;
+}
+
+.ficha-topbar-extra {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ficha-topbar-extra .pill {
+  background: rgba(255,255,255,0.14);
+  color: var(--branco);
+}
+
+.ficha-abas {
+  display: flex;
+  overflow-x: auto;
+  gap: 4px;
+  background: var(--branco);
+  padding: 0 12px;
+  border-bottom: 2px solid var(--cinza-claro);
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+  scrollbar-width: thin;
+}
+.ficha-aba {
+  background: none;
+  border: none;
+  padding: 13px 14px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--cinza-escuro);
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.ficha-aba:hover { color: var(--azul-marinho); }
+.ficha-aba.ativa {
+  color: var(--azul-marinho);
+  border-bottom-color: var(--azul-marinho);
+}
+
+.ficha-conteudo { padding: 22px 0 60px; }
+
+.painel-aba { display: none; }
+.painel-aba.ativa { display: block; animation: fade-in 0.15s ease; }
+
+.grid-visao-geral {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.bloco-hexagono { grid-row: span 2; text-align: center; }
+.bloco-jogadas-rapidas { grid-column: 2; }
+.bloco-cooldowns { grid-column: 2; }
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 920px) {
+  .grid-visao-geral { grid-template-columns: 1fr; }
+  .bloco-hexagono { grid-row: auto; }
+  .bloco-jogadas-rapidas, .bloco-cooldowns { grid-column: 1; }
+  .grid-2-col { grid-template-columns: 1fr; }
+}
+
+/* --- Status --- */
+.status-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cinza-claro);
+  flex-wrap: wrap;
+}
+.status-linha:last-of-type { border-bottom: none; }
+.status-label {
+  font-weight: 600;
+  min-width: 140px;
+  color: var(--azul-marinho);
+}
+.status-extra {
+  font-size: 0.78rem;
+  color: var(--cinza-escuro);
+}
+.select-estagio {
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--cinza-medio);
+  background: var(--branco);
+  font-weight: 600;
+}
+
+.status-toggle-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.9rem;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px; height: 26px;
+  flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--cinza-medio);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 20px; width: 20px;
+  left: 3px; bottom: 3px;
+  background: var(--branco);
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--azul-marinho); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+.toggle-switch input:focus-visible + .toggle-slider { outline: 2px solid var(--azul-cor); }
+
+/* --- Lista de jogadas rápidas --- */
+.lista-jogadas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.item-jogada {
+  border: 1.5px solid var(--cinza-medio);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+  background: var(--branco);
+}
+.item-jogada:hover { border-color: var(--azul-marinho); }
+.item-jogada:active { transform: scale(0.98); }
+.item-jogada-nome { font-weight: 700; color: var(--azul-marinho); display: block; margin-bottom: 4px; }
+.item-jogada-meta { font-size: 0.76rem; color: var(--cinza-escuro); display: block; }
+
+/* --- Cooldowns --- */
+.bloco-cooldowns-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.lista-cooldowns { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.item-cooldown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--cinza-claro);
+  border-radius: var(--radius-md);
+}
+.item-cooldown.pronto { background: #e6f4ec; }
+.item-cooldown-nome { font-weight: 600; }
+.item-cooldown-info { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+.item-cooldown-badge {
+  font-weight: 700;
+  color: var(--branco);
+  background: var(--azul-marinho);
+  border-radius: 999px;
+  padding: 2px 10px;
+  min-width: 2.4ch;
+  text-align: center;
+}
+.item-cooldown.pronto .item-cooldown-badge { background: var(--sucesso); }
+
+/* --- Classes / Essências / Talentos: cards de detalhe --- */
+.detalhe-habilidade {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--cinza-claro);
+}
+.detalhe-habilidade:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+.detalhe-habilidade-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.detalhe-habilidade-titulo h4 { font-size: 1.05rem; color: var(--azul-marinho); }
+.detalhe-habilidade-frase {
+  font-style: italic;
+  color: var(--cinza-escuro);
+  font-size: 0.88rem;
+  margin: 0 0 8px;
+}
+.detalhe-habilidade-desc { margin: 0 0 10px; line-height: 1.5; }
+.detalhe-habilidade-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--cinza-escuro);
+}
+.detalhe-habilidade-meta strong { color: var(--azul-marinho); }
+
+.tag-pericia {
+  display: inline-block;
+  background: var(--cinza-claro);
+  color: var(--azul-marinho);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.flavor-classe {
+  font-style: italic;
+  color: var(--cinza-escuro);
+  margin-bottom: 12px;
+}
+
+/* --- Cor de Ego: roda de seleção --- */
+.seletor-cor-ego {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.opcao-cor-ego {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  background: var(--cinza-claro);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+  min-width: 92px;
+}
+.opcao-cor-ego:hover { transform: translateY(-2px); }
+.opcao-cor-ego.selecionada { border-color: var(--azul-marinho); background: var(--branco); box-shadow: var(--sombra); }
+.opcao-cor-ego-amostra { width: 28px; height: 28px; border-radius: 50%; }
+.opcao-cor-ego-nome { font-size: 0.82rem; font-weight: 700; text-transform: capitalize; }
+.opcao-cor-ego-vantagem { font-size: 0.68rem; color: var(--cinza-escuro); text-align: center; }
+
+/* --- Talentos --- */
+.card-talento {
+  background: var(--branco);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--sombra);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.card-talento-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.card-talento-header h4 { color: var(--azul-marinho); }
+.seletor-nivel {
+  display: flex;
+  gap: 6px;
+}
+.botao-nivel {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--cinza-medio);
+  background: var(--branco);
+  font-weight: 700;
+  color: var(--cinza-escuro);
+}
+.botao-nivel.ativo { background: var(--azul-marinho); color: var(--branco); border-color: var(--azul-marinho); }
+
+/* --- Fluxo --- */
+.fluxo-barra-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0;
+}
+.fluxo-barra-wrap .barra-progresso { flex: 1; }
+
+/* --- Anotações --- */
+#campo-anotacoes {
+  width: 100%;
+  border: 1.5px solid var(--cinza-medio);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-family: var(--fonte-corpo);
+  font-size: 0.95rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+#campo-anotacoes:focus { outline: none; border-color: var(--azul-marinho); }
+
+/* --- Modal de resultado de rolagem --- */
+.resultado-rolagem {
+  text-align: center;
+}
+.resultado-rolagem-total {
+  font-family: var(--fonte-display);
+  font-size: 4rem;
+  color: var(--azul-marinho);
+  line-height: 1;
+  margin: 10px 0;
+}
+.resultado-rolagem-total.execucao-np { color: var(--amarelo-cor); }
+.resultado-rolagem-total.execucao-mp { color: var(--aviso); }
+.resultado-rolagem-total.execucao-ep { color: var(--erro); }
+.resultado-rolagem-detalhe {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+.resultado-rolagem-grupo {
+  background: var(--cinza-claro);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  min-width: 90px;
+}
+.resultado-rolagem-grupo-label { font-size: 0.72rem; color: var(--cinza-escuro); display: block; margin-bottom: 4px; }
+.resultado-rolagem-dados { font-weight: 700; font-size: 1.05rem; }
+.resultado-execucao-banner {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  background: var(--cinza-claro);
+}
+
+@media (max-width: 480px) {
+  .ficha-topbar { padding: 11px 0; }
+  .ficha-abas { top: 58px; }
+  #campo-nome-personagem { font-size: 1.15rem; }
+  .resultado-rolagem-total { font-size: 3rem; }
+}

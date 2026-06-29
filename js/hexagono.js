@@ -1,8 +1,9 @@
 // ============================================================
-// FÓRMULA DO EGO — Hexágono de Atributos (estilo selo Blue Lock)
-// Desenha um hexágono recortado em 6 "fatias" (uma por atributo),
-// imitando o pentágono de status do anime/mangá, mas com 6 pontas.
-// Cada fatia é clicável e dispara a rolagem daquele atributo.
+// FÓRMULA DO EGO — Roda de Atributos (estilo selo Blue Lock)
+// 6 círculos de atributo dispostos em hexágono ao redor de um
+// círculo central, conectados por linhas, com anel decorativo
+// pontilhado (estilo "dado") em volta de cada círculo.
+// Cada círculo é clicável e dispara a rolagem daquele atributo.
 // ============================================================
 
 import { ATRIBUTOS } from "./data/regras-base.js";
@@ -16,93 +17,147 @@ function pontoHexagono(indice, raio, cx, cy, deslocAngulo = -90) {
   return { x: cx + raio * Math.cos(angulo), y: cy + raio * Math.sin(angulo) };
 }
 
-// Cria o SVG completo do hexágono de atributos.
+const svgNS = "http://www.w3.org/2000/svg";
+
+// Desenha o anel decorativo pontilhado (estilo dado/runa) em volta de um círculo
+function criarAnelDecorativo(cx, cy, raio, qtdMarcas = 20) {
+  const grupo = document.createElementNS(svgNS, "g");
+  grupo.classList.add("roda-anel-decorativo");
+  for (let i = 0; i < qtdMarcas; i++) {
+    const angulo = (i * (360 / qtdMarcas)) * (Math.PI / 180);
+    const x1 = cx + raio * Math.cos(angulo);
+    const y1 = cy + raio * Math.sin(angulo);
+    const x2 = cx + (raio - 5) * Math.cos(angulo);
+    const y2 = cy + (raio - 5) * Math.sin(angulo);
+    const linha = document.createElementNS(svgNS, "line");
+    linha.setAttribute("x1", x1.toFixed(2));
+    linha.setAttribute("y1", y1.toFixed(2));
+    linha.setAttribute("x2", x2.toFixed(2));
+    linha.setAttribute("y2", y2.toFixed(2));
+    linha.classList.add("roda-marca-decorativa");
+    grupo.appendChild(linha);
+  }
+  const circuloBase = document.createElementNS(svgNS, "circle");
+  circuloBase.setAttribute("cx", cx);
+  circuloBase.setAttribute("cy", cy);
+  circuloBase.setAttribute("r", raio);
+  circuloBase.classList.add("roda-anel-base");
+  grupo.insertBefore(circuloBase, grupo.firstChild);
+  return grupo;
+}
+
+// Cria o SVG completo da roda de atributos.
 // valores: { potencia: 4, destreza: 3, ... }
 // onClickAtributo: callback(atributoId)
 function criarHexagonoAtributos(valores, onClickAtributo) {
-  const tamanho = 340;
+  const tamanho = 380;
   const cx = tamanho / 2, cy = tamanho / 2;
-  const raioExterno = 140;
-  const raioInterno = 54;
+  const raioPosicao = 132;   // distância do centro até cada círculo de atributo
+  const raioCirculo = 46;    // raio de cada círculo de atributo
+  const raioAnel = 56;       // raio do anel decorativo (um pouco maior que o círculo)
+  const raioCentro = 58;     // raio do círculo central "ATRIBUTOS"
 
-  const svgNS = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", `0 0 ${tamanho} ${tamanho}`);
   svg.classList.add("hexagono-atributos");
   svg.setAttribute("role", "group");
-  svg.setAttribute("aria-label", "Hexágono de Atributos");
+  svg.setAttribute("aria-label", "Roda de Atributos");
 
-  // pontos externos (vértices das pontas) e internos (vértices do pentágono central)
-  const pontosExt = ORDEM_ATRIBUTOS.map((_, i) => pontoHexagono(i, raioExterno, cx, cy));
-  const pontosInt = ORDEM_ATRIBUTOS.map((_, i) => pontoHexagono(i, raioInterno, cx, cy));
+  const pontos = ORDEM_ATRIBUTOS.map((_, i) => pontoHexagono(i, raioPosicao, cx, cy));
 
-  // Para cada atributo, desenha uma "fatia" (triângulo/quadrilátero) que vai
-  // do ponto interno[i] -> externo[i] -> externo do meio entre i e i+1 (pico) -> interno[i+1]
-  // Estética: cada ponta é um polígono com pico saindo do centro vazado.
+  // --- Linhas de conexão do centro até cada círculo (desenhadas primeiro, ficam por baixo) ---
+  const grupoLinhas = document.createElementNS(svgNS, "g");
+  grupoLinhas.classList.add("roda-linhas");
+  pontos.forEach((p) => {
+    const dx = p.x - cx, dy = p.y - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const inicioX = cx + (dx / dist) * raioCentro;
+    const inicioY = cy + (dy / dist) * raioCentro;
+    const fimX = p.x - (dx / dist) * raioAnel;
+    const fimY = p.y - (dy / dist) * raioAnel;
+    const linha = document.createElementNS(svgNS, "line");
+    linha.setAttribute("x1", inicioX.toFixed(2));
+    linha.setAttribute("y1", inicioY.toFixed(2));
+    linha.setAttribute("x2", fimX.toFixed(2));
+    linha.setAttribute("y2", fimY.toFixed(2));
+    linha.classList.add("roda-linha-conexao");
+    grupoLinhas.appendChild(linha);
+  });
+  svg.appendChild(grupoLinhas);
+
+  // --- Círculo central decorativo com "ATRIBUTOS" ---
+  const grupoCentro = document.createElementNS(svgNS, "g");
+  grupoCentro.classList.add("roda-centro-grupo");
+
+  const anelCentro = criarAnelDecorativo(cx, cy, raioCentro + 8, 28);
+  grupoCentro.appendChild(anelCentro);
+
+  const circuloCentro = document.createElementNS(svgNS, "circle");
+  circuloCentro.setAttribute("cx", cx);
+  circuloCentro.setAttribute("cy", cy);
+  circuloCentro.setAttribute("r", raioCentro);
+  circuloCentro.classList.add("roda-centro-circulo");
+  grupoCentro.appendChild(circuloCentro);
+
+  const textoCentro1 = document.createElementNS(svgNS, "text");
+  textoCentro1.setAttribute("x", cx);
+  textoCentro1.setAttribute("y", cy + 5);
+  textoCentro1.setAttribute("text-anchor", "middle");
+  textoCentro1.classList.add("roda-centro-texto");
+  textoCentro1.textContent = "ATRIBUTOS";
+  grupoCentro.appendChild(textoCentro1);
+
+  svg.appendChild(grupoCentro);
+
+  // --- Um círculo por atributo, com anel decorativo, número grande e nome abaixo ---
   ORDEM_ATRIBUTOS.forEach((atrId, i) => {
-    const next = (i + 1) % 6;
-    const pInt1 = pontosInt[i];
-    const pExt1 = pontosExt[i];
-    const pExt2 = pontosExt[next];
-    const pInt2 = pontosInt[next];
+    const p = pontos[i];
 
-    // ponto médio entre os dois pontos internos (para fechar a fatia suavemente)
-    const meioInt = { x: (pInt1.x + pInt2.x) / 2, y: (pInt1.y + pInt2.y) / 2 };
-
-    const path = document.createElementNS(svgNS, "path");
-    const d = `M ${pInt1.x} ${pInt1.y} L ${pExt1.x} ${pExt1.y} L ${pExt2.x} ${pExt2.y} L ${pInt2.x} ${pInt2.y} L ${meioInt.x} ${meioInt.y} Z`;
-    path.setAttribute("d", d);
-    path.classList.add("hexagono-fatia");
-    path.dataset.atributo = atrId;
-    path.setAttribute("tabindex", "0");
-    path.setAttribute("role", "button");
+    const grupoAtributo = document.createElementNS(svgNS, "g");
+    grupoAtributo.classList.add("roda-atributo-grupo");
+    grupoAtributo.dataset.atributo = atrId;
+    grupoAtributo.setAttribute("tabindex", "0");
+    grupoAtributo.setAttribute("role", "button");
     const valor = valores[atrId];
-    path.setAttribute("aria-label", `${ATRIBUTOS[atrId].nome}: ${formatarValorAtributo(valor)}. Clique para rolar.`);
+    grupoAtributo.setAttribute("aria-label", `${ATRIBUTOS[atrId].nome}: ${formatarValorAtributo(valor)}. Clique para rolar.`);
 
-    path.addEventListener("click", () => onClickAtributo && onClickAtributo(atrId));
-    path.addEventListener("keydown", (e) => {
+    // anel decorativo (estilo dado/runa)
+    const anel = criarAnelDecorativo(p.x, p.y, raioAnel, 22);
+    grupoAtributo.appendChild(anel);
+
+    // círculo principal preenchido
+    const circulo = document.createElementNS(svgNS, "circle");
+    circulo.setAttribute("cx", p.x);
+    circulo.setAttribute("cy", p.y);
+    circulo.setAttribute("r", raioCirculo);
+    circulo.classList.add("roda-atributo-circulo");
+    grupoAtributo.appendChild(circulo);
+
+    // número do valor (grande, centrado)
+    const textoValor = document.createElementNS(svgNS, "text");
+    textoValor.setAttribute("x", p.x);
+    textoValor.setAttribute("y", p.y - 4);
+    textoValor.setAttribute("text-anchor", "middle");
+    textoValor.classList.add("roda-atributo-valor");
+    textoValor.dataset.atributoValor = atrId;
+    textoValor.textContent = formatarValorAtributo(valor);
+    grupoAtributo.appendChild(textoValor);
+
+    // nome abreviado (embaixo do número, dentro do círculo)
+    const textoNome = document.createElementNS(svgNS, "text");
+    textoNome.setAttribute("x", p.x);
+    textoNome.setAttribute("y", p.y + 18);
+    textoNome.setAttribute("text-anchor", "middle");
+    textoNome.classList.add("roda-atributo-nome");
+    textoNome.textContent = abreviarAtributo(atrId);
+    grupoAtributo.appendChild(textoNome);
+
+    grupoAtributo.addEventListener("click", () => onClickAtributo && onClickAtributo(atrId));
+    grupoAtributo.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClickAtributo && onClickAtributo(atrId); }
     });
 
-    svg.appendChild(path);
-  });
-
-  // Pentágono/hexágono central vazado (decorativo, como no logo)
-  const centroPath = document.createElementNS(svgNS, "path");
-  const dCentro = pontosInt.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ") + " Z";
-  centroPath.setAttribute("d", dCentro);
-  centroPath.classList.add("hexagono-centro");
-  svg.appendChild(centroPath);
-
-  // Labels + valores em cada ponta
-  ORDEM_ATRIBUTOS.forEach((atrId, i) => {
-    const pExt = pontosExt[i];
-    const pInt = pontosInt[i];
-    // posição do texto: um pouco além do ponto externo, na mesma direção radial
-    const dx = pExt.x - cx, dy = pExt.y - cy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const labelX = cx + (dx / dist) * (raioExterno + 26);
-    const labelY = cy + (dy / dist) * (raioExterno + 26);
-
-    const textNome = document.createElementNS(svgNS, "text");
-    textNome.setAttribute("x", labelX);
-    textNome.setAttribute("y", labelY - 4);
-    textNome.classList.add("hexagono-label-nome");
-    textNome.setAttribute("text-anchor", "middle");
-    textNome.textContent = abreviarAtributo(atrId);
-    svg.appendChild(textNome);
-
-    // valor no meio da fatia (entre interno e externo)
-    const valX = cx + (dx / dist) * (raioExterno - 32);
-    const valY = cy + (dy / dist) * (raioExterno - 32);
-    const textValor = document.createElementNS(svgNS, "text");
-    textValor.setAttribute("x", valX);
-    textValor.setAttribute("y", valY + 6);
-    textValor.classList.add("hexagono-label-valor");
-    textValor.setAttribute("text-anchor", "middle");
-    textValor.dataset.atributoValor = atrId;
-    textValor.textContent = formatarValorAtributo(valores[atrId]);
-    svg.appendChild(textValor);
+    svg.appendChild(grupoAtributo);
   });
 
   return svg;
@@ -126,9 +181,9 @@ function atualizarValoresHexagono(svgEl, valores) {
   ORDEM_ATRIBUTOS.forEach((atrId) => {
     const textEl = svgEl.querySelector(`text[data-atributo-valor="${atrId}"]`);
     if (textEl) textEl.textContent = formatarValorAtributo(valores[atrId]);
-    const fatia = svgEl.querySelector(`path[data-atributo="${atrId}"]`);
-    if (fatia) {
-      fatia.setAttribute("aria-label", `${ATRIBUTOS[atrId].nome}: ${formatarValorAtributo(valores[atrId])}. Clique para rolar.`);
+    const grupo = svgEl.querySelector(`g[data-atributo="${atrId}"]`);
+    if (grupo) {
+      grupo.setAttribute("aria-label", `${ATRIBUTOS[atrId].nome}: ${formatarValorAtributo(valores[atrId])}. Clique para rolar.`);
     }
   });
 }

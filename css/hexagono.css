@@ -1,5 +1,5 @@
 /* ============================================================
-   FÓRMULA DO EGO — Hexágono de Atributos
+   FÓRMULA DO EGO — Roda de Atributos
    ============================================================ */
 
 .hexagono-wrap {
@@ -11,56 +11,98 @@
 
 .hexagono-atributos {
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   height: auto;
   overflow: visible;
 }
 
-.hexagono-fatia {
-  fill: var(--azul-marinho);
-  stroke: var(--cinza-claro);
-  stroke-width: 3;
-  cursor: pointer;
-  transition: fill 0.15s ease, transform 0.15s ease;
-  transform-origin: center;
+/* --- Linhas de conexão do centro até cada atributo --- */
+.roda-linha-conexao {
+  stroke: var(--cinza-medio);
+  stroke-width: 2;
 }
 
-.hexagono-fatia:hover,
-.hexagono-fatia:focus {
-  fill: var(--azul-marinho-claro);
-  outline: none;
+/* --- Anel decorativo pontilhado (estilo dado/runa), reaproveitado
+       tanto nos círculos de atributo quanto no círculo central --- */
+.roda-anel-base {
+  fill: none;
+  stroke: var(--cinza-medio);
+  stroke-width: 1;
+}
+.roda-marca-decorativa {
+  stroke: var(--cinza-medio);
+  stroke-width: 1.5;
 }
 
-.hexagono-fatia:active {
-  fill: var(--amarelo-cor);
-}
-
-.hexagono-centro {
+/* --- Círculo central "ATRIBUTOS" --- */
+.roda-centro-circulo {
   fill: var(--cinza-claro);
   stroke: var(--azul-marinho);
-  stroke-width: 2;
-  pointer-events: none;
+  stroke-width: 2.5;
 }
-
-.hexagono-label-nome {
+.roda-centro-texto {
   font-family: var(--fonte-display);
-  font-size: 13px;
+  font-size: 15px;
   fill: var(--azul-marinho);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   pointer-events: none;
   user-select: none;
 }
 
-.hexagono-label-valor {
+/* --- Cada círculo de atributo --- */
+.roda-atributo-grupo {
+  cursor: pointer;
+}
+.roda-atributo-grupo .roda-anel-base,
+.roda-atributo-grupo .roda-marca-decorativa {
+  transition: stroke 0.15s ease;
+}
+
+.roda-atributo-circulo {
+  fill: var(--azul-marinho);
+  stroke: var(--branco);
+  stroke-width: 4;
+  transition: fill 0.15s ease, transform 0.15s ease;
+  transform-origin: center;
+}
+
+.roda-atributo-grupo:hover .roda-atributo-circulo,
+.roda-atributo-grupo:focus .roda-atributo-circulo {
+  fill: var(--azul-marinho-claro);
+}
+.roda-atributo-grupo:hover .roda-anel-base,
+.roda-atributo-grupo:hover .roda-marca-decorativa,
+.roda-atributo-grupo:focus .roda-anel-base,
+.roda-atributo-grupo:focus .roda-marca-decorativa {
+  stroke: var(--azul-marinho-claro);
+}
+.roda-atributo-grupo:focus {
+  outline: none;
+}
+.roda-atributo-grupo:active .roda-atributo-circulo {
+  fill: var(--amarelo-cor);
+}
+
+.roda-atributo-valor {
   font-family: var(--fonte-display);
-  font-size: 22px;
+  font-size: 26px;
   fill: var(--branco);
   pointer-events: none;
   user-select: none;
 }
 
+.roda-atributo-nome {
+  font-family: var(--fonte-display);
+  font-size: 12px;
+  fill: var(--cinza-medio);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  user-select: none;
+}
+
 @media (max-width: 480px) {
-  .hexagono-atributos { max-width: 280px; }
-  .hexagono-label-nome { font-size: 11px; }
-  .hexagono-label-valor { font-size: 18px; }
+  .hexagono-atributos { max-width: 300px; }
+  .roda-centro-texto { font-size: 12px; }
+  .roda-atributo-valor { font-size: 21px; }
+  .roda-atributo-nome { font-size: 10px; }
 }

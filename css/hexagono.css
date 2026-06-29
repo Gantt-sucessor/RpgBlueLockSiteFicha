@@ -1,0 +1,66 @@
+/* ============================================================
+   FÓRMULA DO EGO — Hexágono de Atributos
+   ============================================================ */
+
+.hexagono-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hexagono-atributos {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  overflow: visible;
+}
+
+.hexagono-fatia {
+  fill: var(--azul-marinho);
+  stroke: var(--cinza-claro);
+  stroke-width: 3;
+  cursor: pointer;
+  transition: fill 0.15s ease, transform 0.15s ease;
+  transform-origin: center;
+}
+
+.hexagono-fatia:hover,
+.hexagono-fatia:focus {
+  fill: var(--azul-marinho-claro);
+  outline: none;
+}
+
+.hexagono-fatia:active {
+  fill: var(--amarelo-cor);
+}
+
+.hexagono-centro {
+  fill: var(--cinza-claro);
+  stroke: var(--azul-marinho);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.hexagono-label-nome {
+  font-family: var(--fonte-display);
+  font-size: 13px;
+  fill: var(--azul-marinho);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hexagono-label-valor {
+  font-family: var(--fonte-display);
+  font-size: 22px;
+  fill: var(--branco);
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 480px) {
+  .hexagono-atributos { max-width: 280px; }
+  .hexagono-label-nome { font-size: 11px; }
+  .hexagono-label-valor { font-size: 18px; }
+}

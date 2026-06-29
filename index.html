@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Fórmula do Ego — Fichas para Blue Lock RPG</title>
+  <meta name="description" content="Fichas digitais para o sistema Fórmula do Ego (RPG de Blue Lock). Rolagem automática, campanhas compartilhadas e controle de cooldowns para o Mestre.">
+  <meta name="theme-color" content="#0d2c6b">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/componentes.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div id="tela-loading" class="tela-loading">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+  </div>
+
+  <header class="home-header">
+    <div class="container home-header-inner">
+      <div class="home-logo">
+        <svg class="home-logo-pent" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2 L22 9.5 L18.2 21 L5.8 21 L2 9.5 Z M12 8 L15.5 10.6 L14.2 14.8 L9.8 14.8 L8.5 10.6 Z" fill="currentColor"/>
+        </svg>
+        <span>FÓRMULA DO EGO</span>
+      </div>
+      <p class="home-tagline">Fichas pro seu time</p>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <div class="container">
+
+      <section class="home-hero">
+        <h1>Menos planilha,<br>mais campo.</h1>
+        <p class="home-hero-sub">
+          Fichas digitais para o sistema <strong>Fórmula do Ego</strong> (RPG de Blue Lock).
+          Dados rolados automaticamente, cooldowns que descontam sozinhos e
+          todo o time vendo os status de todo mundo, em tempo real.
+        </p>
+      </section>
+
+      <section id="area-logado" class="home-acoes" hidden>
+        <div class="card home-card">
+          <h2>Criar uma campanha</h2>
+          <p>Você vira o Mestre. Vai receber um código pra mandar pro seu time.</p>
+          <div class="form-grupo">
+            <label for="input-nome-campanha">Nome da campanha</label>
+            <input type="text" id="input-nome-campanha" placeholder="Ex: Blue Lock — Segunda Seleção">
+          </div>
+          <button class="btn btn-primario" id="btn-criar-campanha">Criar campanha</button>
+        </div>
+
+        <div class="card home-card">
+          <h2>Entrar em uma campanha</h2>
+          <p>Pede o código de convite pro Mestre da sua mesa.</p>
+          <div class="form-grupo">
+            <label for="input-codigo-campanha">Código de convite</label>
+            <input type="text" id="input-codigo-campanha" placeholder="Ex: AB12CD" maxlength="6" style="text-transform:uppercase">
+          </div>
+          <button class="btn btn-secundario" id="btn-entrar-campanha">Entrar</button>
+        </div>
+
+        <div class="card home-card home-card-fichas">
+          <h2>Suas fichas</h2>
+          <div id="lista-fichas-usuario" class="lista-fichas-usuario">
+            <p class="texto-discreto">Carregando suas fichas...</p>
+          </div>
+          <button class="btn btn-secundario" id="btn-nova-ficha-livre">+ Criar ficha sem campanha</button>
+        </div>
+      </section>
+
+      <section id="area-deslogado" class="home-entrada" hidden>
+        <div class="card home-card-entrada">
+          <h2>Como você quer ser chamado?</h2>
+          <p>Não precisa de senha — só pra identificar suas fichas e campanhas.</p>
+          <div class="form-grupo">
+            <label for="input-nome-usuario">Seu nome</label>
+            <input type="text" id="input-nome-usuario" placeholder="Ex: Gabriel">
+          </div>
+          <button class="btn btn-primario" id="btn-comecar">Começar</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="home-footer">
+    <div class="container">
+      <p>Sistema "Fórmula do Ego" criado por xxpaodeforma. Site não-oficial, sem fins lucrativos.
+      Blue Lock pertence a Muneyuki Kaneshiro e Yusuke Nomura.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/pagina-home.js"></script>
+</body>
+</html>

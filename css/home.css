@@ -1,0 +1,98 @@
+/* ============================================================
+   FÓRMULA DO EGO — Página Home
+   ============================================================ */
+
+.home-header {
+  background: var(--azul-marinho);
+  padding: 16px 0;
+}
+.home-header-inner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.home-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--branco);
+  font-family: var(--fonte-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+}
+.home-logo-pent { width: 28px; height: 28px; color: var(--amarelo-cor); }
+.home-tagline { color: var(--cinza-medio); font-size: 0.85rem; margin: 0; }
+
+.home-main { flex: 1; padding: 40px 0 60px; }
+
+.home-hero { max-width: 680px; margin-bottom: 36px; }
+.home-hero h1 {
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.home-hero-sub {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--cinza-escuro);
+}
+
+.home-acoes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.home-card-fichas { grid-column: 1 / -1; }
+
+.home-card h2 { font-size: 1.3rem; margin-bottom: 6px; }
+.home-card p { color: var(--cinza-escuro); margin: 0 0 16px; font-size: 0.92rem; }
+
+.home-entrada {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+.home-card-entrada {
+  max-width: 420px;
+  width: 100%;
+}
+.home-card-entrada h2 { font-size: 1.4rem; margin-bottom: 6px; }
+.home-card-entrada p { color: var(--cinza-escuro); margin: 0 0 18px; }
+
+.lista-fichas-usuario {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.item-ficha-usuario {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--cinza-claro);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--preto-texto);
+  transition: background 0.15s ease;
+}
+.item-ficha-usuario:hover { background: #e9edf9; }
+.item-ficha-usuario-nome { font-weight: 700; color: var(--azul-marinho); }
+.item-ficha-usuario-meta { font-size: 0.8rem; color: var(--cinza-escuro); }
+
+.texto-discreto { color: var(--cinza-escuro); font-size: 0.9rem; }
+
+.home-footer {
+  background: var(--azul-marinho-escuro);
+  color: var(--cinza-medio);
+  padding: 18px 0;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .home-acoes { grid-template-columns: 1fr; }
+}

@@ -19,7 +19,8 @@ function montarHexagono() {
     const valor = valorAtributoComposto(atrId, estado.ficha.atributos);
     abrirModalRolagem({
       titulo: `Rolar ${ATRIBUTOS[atrId].nome}`,
-      atributoValor: valor
+      atributoValor: valor,
+      registrarRolagem: registrarRolagemNaFicha
     });
   });
   wrap.innerHTML = "";
@@ -175,7 +176,10 @@ function montarJogadasRapidas() {
       const valorAtr = valorAtributoComposto(jogada.atributo, estado.ficha.atributos);
       abrirModalRolagem({
         titulo: jogada.nome,
-        atributoValor: valorAtr
+        atributoValor: valorAtr,
+        jogadaId: jogada.id,
+        ficha: estado.ficha,
+        registrarRolagem: registrarRolagemNaFicha
       });
     }
   });
@@ -193,6 +197,48 @@ function montarVisaoGeral() {
   montarStatus();
   montarJogadasRapidas();
   montarCooldowns();
+  montarHistoricoRolagens();
+}
+
+// Salva a rolagem no histórico da própria ficha (visível pelo Mestre e por
+// todos na campanha, já que a ficha é compartilhada em tempo real).
+// Mantém só as últimas 15 rolagens para não inflar o documento.
+function registrarRolagemNaFicha({ titulo, resultado }) {
+  const entrada = {
+    titulo,
+    total: resultado.total,
+    vantagens: resultado.vantagens,
+    desvantagens: resultado.desvantagens,
+    bonus: resultado.bonus,
+    execucao: resultado.execucaoAbsoluta ? resultado.execucaoAbsoluta.nome : null,
+    quando: Date.now()
+  };
+  const historicoAtual = estado.ficha.historicoRolagens || [];
+  const novoHistorico = [entrada, ...historicoAtual].slice(0, 15);
+  salvarCampoImediato({ historicoRolagens: novoHistorico });
+  montarHistoricoRolagens();
+}
+
+function montarHistoricoRolagens() {
+  const container = document.getElementById("lista-historico-rolagens");
+  if (!container) return;
+  const historico = estado.ficha.historicoRolagens || [];
+  if (historico.length === 0) {
+    container.innerHTML = `<p class="texto-discreto">Nenhuma rolagem ainda.</p>`;
+    return;
+  }
+  container.innerHTML = "";
+  historico.forEach((r) => {
+    const div = document.createElement("div");
+    div.className = "item-historico-rolagem";
+    const hora = new Date(r.quando).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    div.innerHTML = `
+      <span class="item-historico-titulo">${r.titulo}</span>
+      <span class="item-historico-total ${r.execucao ? "com-execucao" : ""}">${r.total}</span>
+      <span class="item-historico-meta">${r.vantagens}V/${r.desvantagens}D · ${hora}${r.execucao ? ` · ⚡${r.execucao}` : ""}</span>
+    `;
+    container.appendChild(div);
+  });
 }
 
 function atualizarVisaoGeralRemota() {
@@ -200,6 +246,7 @@ function atualizarVisaoGeralRemota() {
   // decrementou cooldowns), re-renderiza só as partes voláteis.
   if (hexagonoSvg) atualizarValoresHexagono(hexagonoSvg, estado.ficha.atributos);
   montarCooldowns();
+  montarHistoricoRolagens();
   // Atualiza steppers de tokens/fôlego/chama sem perder o foco do usuário se possível
   const ativo = document.activeElement;
   const dentroDeStepper = ativo && ativo.closest && ativo.closest(".stepper");

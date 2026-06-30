@@ -102,14 +102,14 @@ const CATEGORIA_PRINCIPAL = {
     flavor: "O gênio é aquele que não entende por que é tão brilhante, apenas é. Seus pés se movem como se estivessem ligados diretamente ao instinto, e o impossível se torna cotidiano.",
     habilidade: {
       nome: "Genialidade Cotidiana",
-      frase: "Pra eles, um milagre, pra você, só mais um dia comum.",
-      desc: "Escolha 3 Jogadas diferentes. Durante 1D4+1 Rodadas, recebe 1 Vantagem e +2 de Bônus em cada uma, além de +2 Fôlegos.",
-      distancia: "Pessoal", cooldown: 5, duracao: "1D4+1 Rodadas", tipoAcao: "Ação Egoísta"
+      frase: "Vai quebrar a cara, cai na minha frente",
+      desc: "Caso vá fazer uma Jogada de J vs J, pode ativar essa habilidade, assim gastando 1 Token de Ego para cada +1 Vantagem que deseje ganhar nessa tentativa(ex:3 Tokens = 3 Vantagens).",
+      distancia: "Pessoal", cooldown: 2, duracao: "Instantâneo", tipoAcao: "Ação Egoísta"
     },
     subcategorias: [
       { id: "prodigio", nome: "Prodígio", desc: "Toda vez que ganhar em duas Jogadas seguidas, recebe 2 Tokens de Ego e 1 Vantagem na próxima Jogada (não acumulável)." },
-      { id: "ambidestro", nome: "Ambidestro", desc: "Escolha 2 Jogadas sem Perícia (ou 1 com Perícia) de Drible, Destreza ou Potência para +3 de Bônus." },
-      { id: "arquiteto", nome: "Arquiteto", desc: "Ganhar uma Jogada de Análise: você e o time recebem +3 de Bônus na próxima Jogada de Ego ou Visão de Jogo (não acumulável)." }
+      { id: "ambidestro", nome: "Ambidestro", desc: "Você escolha 2 Jogadas que você não tenha Perícia (ou apenas 1 que você possua Perícia) de Drible, Destreza ou Potência para +3 de Bônus." },
+      { id: "arquiteto", nome: "Arquiteto", desc: "Toda vez que ganhar em uma jogada de Análise, você e todo seu time recebe +3 de Bonûs na próxima Jogada de J vs J (não acumulável)." }
     ]
   },
   aprendiz: {

@@ -364,7 +364,7 @@ const CLASSES_PARTE2 = [
     },
     fluxo: {
       nome: "Engrenagens Minimalistas", frase: "Gente como a gente não nasceu pro 1º lugar...",
-      desc: "Você escolhe 3 alvos para ficarem marcados pelas "Engrenagens". Durante 1D4 + 2 Rodadas, toda vez que desejarem fazer uma ação, antes devem rodar um Teste de Ego com DJ igual sua Visão de Jogo x 8. Caso falhem, perdem sua Ação Comum e não conseguem fazer a ação desejada.",
+      desc: "Você escolhe 3 alvos para ficarem marcados pelas \"Engrenagens\". Durante 1D4 + 2 Rodadas, toda vez que desejarem fazer uma ação, antes devem rodar um Teste de Ego com DJ igual sua Visão de Jogo x 8. Caso falhem, perdem sua Ação Comum e não conseguem fazer a ação desejada.",
       distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D4+2 Rodadas", tipoAcao: "Ação Egoísta + Reação"
     },
     porcentagensFluxo: [["Trash Talk", 15], ["Interceptação", 10], ["Roubo", 10]]

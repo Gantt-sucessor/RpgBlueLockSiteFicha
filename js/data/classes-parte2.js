@@ -327,21 +327,21 @@ const CLASSES_PARTE2 = [
       distancia: "Distância de Passe/ 8 m", cooldown: 4, duracao: "1d4 + 1 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum"
     },
     semBola: {
-      nome: "Ninho do Corvo", frase: "Você tá na minha área, seu lixo!",
-      desc: "Cria área de 3m² a até 3m da linha central, dura 1D4 Rodadas. Dentro dela, Interceptações garantidas.",
-      distancia: "3 m² / 3 m", cooldown: 6, duracao: "1D4 Rodadas", tipoAcao: "Ação Egoísta"
+      nome: "Proporções Glam! (habilidade marcada)", frase: "Que vibe nostálgica, lembrei de casa!",
+      desc: "Durante 1D4 + 1 Rodadas, seus Roubos e Interceptações recebem 2 Vantagens e, sempre que ganhar em um deles, você tem a opção de andar 2 m e fazer um Passe Curto garantido.",
+      distancia: "pessoal", cooldown: 6, duracao: "1D4 + 1 Rodadas", tipoAcao: "Ação Egoísta"
     },
     variavel: {
-      nome: "Os Dois Babacas", frase: "'Manda ele comer merda!' 'eu não, manda você'",
-      desc: "Ao dominar um Passe, ative como Reação: você e o passador fazem Trash Talk em 2 alvos diferentes, 2 Vantagens e +3 de Bônus, ignorando distância (só se o passador tiver Perícia em Roubo).",
-      distancia: "Pessoal", cooldown: 7, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação", tipoVariavel: "quimica"
+      nome: "Taekwondo Glam!", frase: "Acha que tá indo pra onde, bonitinho?",
+      desc: "Você cria uma área de 4x4 à sua volta. Quando um alvo entrar nessa área e depois tentar fugir, ele deverá fazer um Teste de Robustez contra um Teste de Destreza seu, caso falha, ficará preso nessa área, tendo que refazer o Teste na próxima Rodada caso ainda queira fugir. Essa área dura quantas Rodadas desejar, mas você deve gastar sua Ação de Movimento para cada Rodada ativa.",
+      distancia: "4x4", cooldown: 9, duracao: "Quantas rodadas desejar", tipoAcao: "Ação Egoísta (+ Ação de Movimento por Rodada ativa)", tipoVariavel: "quimica"
     },
     fluxo: {
-      nome: "Ka-caw!", frase: "Até a inteligência de um CORVO é maior que a sua!",
-      desc: "Após Interceptação bem-sucedida, ative como Reação: avança 4m. Ao fim, alvos em 7m² fazem Ego DJ 20; quem falhar tem 2 Atributos zerados por 1D4+1 Rodadas.",
-      distancia: "4 m / 7 m²", cooldown: "1 por Fluxo", duracao: "1D4+1 Rodadas", tipoAcao: "Ação Egoísta + Reação"
+      nome: " Destruindo com Glam!", frase: "Me mostre a chave pro seu resplendor maior!!",
+      desc: "Você faz uma Interceptação com +10 de Bônus e, caso intercepte, faz um Passe Longo garantido para qualquer aliado no alcance. Essa habilidade pode ser usada até 3 vezes no Fluxo.",
+      distancia: "Pessoal", cooldown: "3 por Fluxo", duracao: "1 Rodada", tipoAcao: "Ação Egoísta + Reação"
     },
-    porcentagensFluxo: [["Trash Talk", 15], ["Interceptação", 10], ["Roubo", 10]]
+    porcentagensFluxo: [["Interceptação", 15], ["Roubo", 10], ["Trash Talk", 10]]
   },
    {
     id: "matador_realista", nome: "MATADOR REALISTA",

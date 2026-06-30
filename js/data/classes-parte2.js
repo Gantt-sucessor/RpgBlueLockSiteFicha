@@ -416,10 +416,10 @@ const CLASSES_PARTE2 = [
     },
     fluxo: {
       nome: "Constância Dependente", frase: "Cem por cento do tempo, eu serei útil!",
-      desc: "Durante 1D6 + Visão de Jogo Rodadas, escolha um alvo para receber o efeito \"Portador\", concedendo:
-      "Passes como Reação caso ele entre no alcance.
-      "Gastar uma Ação Egoísta para dar apoio moral, dando +1 Vantagem na Jogada atual do alvo.
-      "Caso ele se mova adjacente a você, pode gastar 1 Reação + 1 Fôlego para segui-lo, gastando seus fôlegos da próxima Rodada.",
+      desc: `Durante 1D6 + Visão de Jogo Rodadas, escolha um alvo para receber o efeito "Portador", concedendo:
+      1. Passes como Reação caso ele entre no alcance.
+      2. Gastar uma Ação Egoísta para dar apoio moral, dando +1 Vantagem na Jogada atual do alvo.
+      3. Caso ele se mova adjacente a você, pode gastar 1 Reação + 1 Fôlego para segui-lo, gastando seus fôlegos da próxima Rodada.`,
       distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D6 + Visão de Jogo Rodadas", tipoAcao: "Ação Egoísta"
     },
     porcentagensFluxo: [["Passe Curto", 15], ["Roubo", 10], ["Análise", 10]]

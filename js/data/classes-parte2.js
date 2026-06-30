@@ -344,7 +344,7 @@ const CLASSES_PARTE2 = [
     porcentagensFluxo: [["Interceptação", 15], ["Roubo", 10], ["Trash Talk", 10]]
   },
    {
-    id: "matador_realista", nome: "MATADOR REALISTA",
+    id: "matador_realista", nome: "Matador Realista",
     flavor: "Seu modo de jogo é focado em menosprezar seus oponentes ao ponto de quebrar suas idealizações, mostrando a verdade nua e crua.",
     pericias: ["2 Vantagens em Trash Talk", " 1 Vantagem em Passe Longo"],
     comBola: {
@@ -368,6 +368,32 @@ const CLASSES_PARTE2 = [
       distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D4+2 Rodadas", tipoAcao: "Ação Egoísta + Reação"
     },
     porcentagensFluxo: [["Trash Talk", 15], ["Interceptação", 10], ["Roubo", 10]]
+  },
+  {
+    id: "monge_malicioso", nome: "Monge Malicioso",
+    flavor: "Seu modo de jogo é focado em tirar vantagem de seus oponentes no puro jogo sujo, fingindo diversas faltas e mostrando que cair também é importante.",
+    pericias: ["2 Vantagens em Jogo Sujo", "1 Vantagem em Interceptação"],
+    comBola: {
+      nome: "Falsidade no Talo", frase: "Fingir uma falta não é tão difícil assim, não é?!",
+      desc: "Como Reação de um Roubo/Jogo de Corpo contra você, você faz uma Jogada de Jogo Sujo contra o alvo. Caso ganhe, você anula a tentativa dele e ele perde sua próxima Rodada, porém caso você perca essa habilidade receberá +3 Rodadas de Cooldown..",
+      distancia: " Corpo a Corpo", cooldown: 6, duracao: "Instântaneo", tipoAcao: "Ação Egoísta + Reação"
+    },
+    semBola: {
+      nome: "Milagre do Mais Honrado (habilidade marcada)", frase: "Namaste!.",
+      desc: "Ao falhar em um Teste de Roubo/Interceptação, você gasta 2 Tokens de Ego e uma Reação para rerodar a Jogada com 2 Vantagens e +2 de Bônus.",
+      distancia: "Pessoal", cooldown: 3, duracao: "Instântaneo", tipoAcao: "Ação Egoísta + Reação"
+    },
+    variavel: {
+      nome: "Dharma Dourado", frase: "Sorte? Nada disso, é o grande Buda!",
+      desc: "Ao falhar em uma Jogada de J vs J, você pode ativar essa habilidade como Reação, assim fazendo um Jogo Sujo contra todos os alvos em até 3 m² com acerto garantido..",
+      distancia: "Pessoal", cooldown: 5, duracao: "Instântaneo", tipoAcao: "Ação Egoísta + Reação", tipoVariavel: "quimica"
+    },
+    fluxo: {
+      nome: "Os Três Tesouros", frase: "Não chega perto de mim!!.",
+      desc: "Você escolhe até 3 alvos para criar uma área de 3 m² que os acompanha por 1D6 + 1 Rodadas. Caso entre em uma dessas áreas, como Reação você pode fazer um Jogo Sujo com 1 Vantagem e +3 de Bônus a quem está com a área. Além disso, caso haja sucesso em tal ato, o acertado também perde -1 Token de Ego adicional e -2 Fôlegos por 1D2 + 1 Rodadas.",
+      distancia: "3 m", cooldown: "1 por Fluxo", duracao: "1D6 + 1 Rodadas", tipoAcao: "Ação Egoísta + Reação"
+    },
+    porcentagensFluxo: [["Jogo Sujo", 15], ["Interceptação", 10], ["Roubo", 10]]
   }
 ];
 

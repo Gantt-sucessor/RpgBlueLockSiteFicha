@@ -394,6 +394,35 @@ const CLASSES_PARTE2 = [
       distancia: "3 m", cooldown: "1 por Fluxo", duracao: "1D6 + 1 Rodadas", tipoAcao: "Ação Egoísta + Reação"
     },
     porcentagensFluxo: [["Jogo Sujo", 15], ["Interceptação", 10], ["Roubo", 10]]
+  },
+  {
+    id: "estrela_resiliente", nome: "Estrela Resiliente",
+    flavor: "Seu modo de jogo é focado em ser apenas do seu time, não como dependência, mas como alguém que QUER evoluir..",
+    pericias: ["2 Vantagens em Passe Curto", "1 Vantagem em Roubo"],
+    comBola: {
+      nome: "Esforço Possessivo (habilidade marcada)", frase: "Você agora é minha propriedade",
+      desc: "Você escolhe um aliado e cria uma área de 4x4 em 6+ metros de distância dele. Caso ele entre nessa área, você pode fazer um Passe Longo com 3 Vantagens como Reação que ignora distâncias, mas gasta sua próxima Rodada.",
+      distancia: " 6 m", cooldown: 6, duracao: "Instântaneo", tipoAcao: "Ação Egoísta + Reação"
+    },
+    semBola: {
+      nome: "Trabalho Duro", frase: "O segredo é não apenas se esforçar, mas ultrapassar 101% dos seus limites!",
+      desc: "Você escolhe duas Perícias que não tenha. Durante 1D6 + Visão de Jogo Rodadas, uma delas será Perícia Única e a outra será uma Perícia Dupla.",
+      distancia: "Pessoal", cooldown: 5, duracao: "1D6 + Visão de Jogo Rodadas", tipoAcao: "Ação Egoísta"
+    },
+    variavel: {
+      nome: "Mérito Desmerecido", frase: "Mesmo longe dos holofotes, eu ainda tô perto!",
+      desc: "Durante 1D4 + 2 Rodadas, você e um aliado adjacente ignoram qualquer malefício, seja de Bônus negativo, Desvantagens, menos Fôlegos, etc (exceto distâncias de chute e passe). Ao fim desse modo, você perde sua próxima Rodada (apenas utilizável caso o alvo tenha Perícia em uma mesma que você tenha, mas que seja única).",
+      distancia: "Pessoal", cooldown: 8, duracao: " 1D4 + 2 Rodadas", tipoAcao: "Ação Egoísta", tipoVariavel: "quimica"
+    },
+    fluxo: {
+      nome: "Constância Dependente", frase: "Cem por cento do tempo, eu serei útil!",
+      desc: "Durante 1D6 + Visão de Jogo Rodadas, escolha um alvo para receber o efeito \"Portador\", concedendo:
+      "Passes como Reação caso ele entre no alcance.
+      "Gastar uma Ação Egoísta para dar apoio moral, dando +1 Vantagem na Jogada atual do alvo.
+      "Caso ele se mova adjacente a você, pode gastar 1 Reação + 1 Fôlego para segui-lo, gastando seus fôlegos da próxima Rodada.",
+      distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D6 + Visão de Jogo Rodadas", tipoAcao: "Ação Egoísta"
+    },
+    porcentagensFluxo: [["Passe Curto", 15], ["Roubo", 10], ["Análise", 10]]
   }
 ];
 

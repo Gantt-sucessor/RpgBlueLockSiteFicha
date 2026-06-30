@@ -316,6 +316,58 @@ const CLASSES_PARTE2 = [
       distancia: "4 m / 7 m²", cooldown: "1 por Fluxo", duracao: "1D4+1 Rodadas", tipoAcao: "Ação Egoísta + Reação"
     },
     porcentagensFluxo: [["Trash Talk", 15], ["Interceptação", 10], ["Roubo", 10]]
+  },
+  {
+    id: "resplendor_aéreo", nome: "Resplendor Aéreo",
+    flavor: "Seu modo de jogo é focado em pulos extremamente belos e robustos tão maravilhosos quanto você.",
+    pericias: ["2 Vantagens em Interceptação", "1 Vantagem em Roubo"],
+    comBola: {
+      nome: "Posicioanamento Glam!", frase: "Eu, tu, nós bota eles no bolso!",
+      desc: "Você faz um Passe Longo com 2 Vantagens. Caso haja sucesso, você e todos seus aliados em até 8 m à sua volta recebem 1 Vantagem e +2 de Bonus em 2 jogadas à sua escolha por 1d4 + 1 Rodadas.",
+      distancia: "Distância de Passe/ 8 m", cooldown: 4, duracao: "1d4 + 1 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum"
+    },
+    semBola: {
+      nome: "Ninho do Corvo", frase: "Você tá na minha área, seu lixo!",
+      desc: "Cria área de 3m² a até 3m da linha central, dura 1D4 Rodadas. Dentro dela, Interceptações garantidas.",
+      distancia: "3 m² / 3 m", cooldown: 6, duracao: "1D4 Rodadas", tipoAcao: "Ação Egoísta"
+    },
+    variavel: {
+      nome: "Os Dois Babacas", frase: "'Manda ele comer merda!' 'eu não, manda você'",
+      desc: "Ao dominar um Passe, ative como Reação: você e o passador fazem Trash Talk em 2 alvos diferentes, 2 Vantagens e +3 de Bônus, ignorando distância (só se o passador tiver Perícia em Roubo).",
+      distancia: "Pessoal", cooldown: 7, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação", tipoVariavel: "quimica"
+    },
+    fluxo: {
+      nome: "Ka-caw!", frase: "Até a inteligência de um CORVO é maior que a sua!",
+      desc: "Após Interceptação bem-sucedida, ative como Reação: avança 4m. Ao fim, alvos em 7m² fazem Ego DJ 20; quem falhar tem 2 Atributos zerados por 1D4+1 Rodadas.",
+      distancia: "4 m / 7 m²", cooldown: "1 por Fluxo", duracao: "1D4+1 Rodadas", tipoAcao: "Ação Egoísta + Reação"
+    },
+    porcentagensFluxo: [["Trash Talk", 15], ["Interceptação", 10], ["Roubo", 10]]
+  },
+   {
+    id: "matador_realista", nome: "MATADOR REALISTA",
+    flavor: "Seu modo de jogo é focado em menosprezar seus oponentes ao ponto de quebrar suas idealizações, mostrando a verdade nua e crua.",
+    pericias: ["2 Vantagens em Trash Talk", " 1 Vantagem em Passe Longo"],
+    comBola: {
+      nome: "Fardo Forçado", frase: "Você acredita em destino?",
+      desc: "Você faz um Passe Longo com 2 Vantagens. Caso haja sucesso, escolha um alvo em até 4 m² de você para receber Quebra de Ego, porém por apenas 2 Rodadas e depois volta com seus Tokens comuns.",
+      distancia: " Distância de Passe/4 m", cooldown: 5, duracao: "2 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum"
+    },
+    semBola: {
+      nome: "Vitória Inevitável (habilidade marcada)", frase: "Não é questão de ser, a questão é que eu já sou.",
+      desc: "Ao um alvo fazer uma Jogada em até 5 m², você pode escolher uma habilidade dele para se tornar inutilizável por 3 Rodadas (caso seja uma habilidade ativa no momento, ela retorna ao seu funcionamento comum após as 3 Rodadas).",
+      distancia: "pessoal", cooldown: 3, duracao: "3 Rodadas", tipoAcao: "Ação Egoísta + Reação"
+    },
+    variavel: {
+      nome: "Humilhação Gratuita", frase: "Tenho 1001 motivos para xingar um lixo como VOCÊ",
+      desc: "Ao ganhar um inimigo com qualquer Jogada de J vs J você pode ativar essa habilidade como Reação, assim fazendo um Passe Longo com 2 Vantagens para um alvo no alcance e escolhe uma habilidade do perdedor para se tornar inutilizável por 4 Rodadas (caso seja uma habilidade ativa no momento, ela retorna ao seu funcionamento comum após as 4 Rodadas).",
+      distancia: "Distância de Passe", cooldown: 8, duracao: "3 rodadas", tipoAcao: "Ação Comum + Reação", tipoVariavel: "quimica"
+    },
+    fluxo: {
+      nome: "Engrenagens Minimalistas", frase: "Gente como a gente não nasceu pro 1º lugar...",
+      desc: "Você escolhe 3 alvos para ficarem marcados pelas "Engrenagens". Durante 1D4 + 2 Rodadas, toda vez que desejarem fazer uma ação, antes devem rodar um Teste de Ego com DJ igual sua Visão de Jogo x 8. Caso falhem, perdem sua Ação Comum e não conseguem fazer a ação desejada.",
+      distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D4+2 Rodadas", tipoAcao: "Ação Egoísta + Reação"
+    },
+    porcentagensFluxo: [["Trash Talk", 15], ["Interceptação", 10], ["Roubo", 10]]
   }
 ];
 

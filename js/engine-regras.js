@@ -181,6 +181,11 @@ function passarRodadaCooldowns(habilidades) {
 
 // Gera o texto descritivo do indicador visual de cooldown
 function textoIndicadorCooldown(cd) {
+  // Habilidade com duração ativa
+  if (cd.duracaoAtual && cd.duracaoAtual > 0) {
+    return `⏳ Ativa por mais ${cd.duracaoAtual} turno${cd.duracaoAtual !== 1 ? "s" : ""} — depois entra em cooldown (${cd.cooldownMax})`;
+  }
+  // Habilidade em cooldown
   if (!cd.usadoNaRodada) return `${cd.cooldownAtual} turno${cd.cooldownAtual !== 1 ? "s" : ""} restante${cd.cooldownAtual !== 1 ? "s" : ""}`;
   if (cd.cooldownAtual === 0) return "Disponível agora ✅";
   return `Usada no Turno ${cd.usadoNaTurno} (Rodada ${cd.usadoNaRodada}) — disponível no Turno ${cd.disponivelNaTurno} (Rodada ${cd.disponivelNaRodada})`;

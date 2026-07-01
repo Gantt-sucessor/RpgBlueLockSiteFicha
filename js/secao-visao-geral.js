@@ -9,8 +9,7 @@ import { ATRIBUTOS, CORES_EGO, COR_EGO_HEX, ESTAGIOS, JOGADAS_BASE } from "./dat
 import {
   calcDistanciaChute, calcDistanciaPasse, calcFolegoMaximo, calcLimiteTokensEgo,
   textoIndicadorCooldown
-} from "./engine-regras.js";
-import { renderizarListaJogadas, abrirModalRolagem, renderizarCooldowns, nomeAtributoComposto, valorAtributoComposto } from "./render-jogadas.js";
+} from "./engine-regras.js";import { renderizarListaJogadas, abrirModalRolagem, renderizarCooldowns, nomeAtributoComposto, valorAtributoComposto } from "./render-jogadas.js";
 
 let hexagonoSvg = null;
 
@@ -260,13 +259,14 @@ function abrirModalQuebraEgo() {
   const egoAtributo = estado.ficha.atributos.ego || 0;
   const dj = 16 - egoAtributo;
 
-  // Rola o D12 + D6s de Ego
+  // Rola o D12 + D6s de Ego (só se Ego for positivo)
   const d12 = Math.floor(Math.random() * 12) + 1;
-  const d6s = egoAtributo > 0
-    ? Array.from({ length: egoAtributo }, () => Math.floor(Math.random() * 6) + 1)
-    : [];
+  const qtdD6 = Math.max(0, egoAtributo); // Ego negativo = sem D6s extras
+  const d6s = Array.from({ length: qtdD6 }, () => Math.floor(Math.random() * 6) + 1);
   const somaD6 = d6s.reduce((a, b) => a + b, 0);
-  const total = d12 + somaD6;
+  // Ego negativo subtrai do total (cada ponto negativo = -1 no resultado)
+  const penalidade = egoAtributo < 0 ? egoAtributo : 0;
+  const total = d12 + somaD6 + penalidade;
   const passou = total >= dj;
 
   // Sorteia 3 jogadas aleatórias diferentes para o debuff (se falhar)
@@ -284,7 +284,7 @@ function abrirModalQuebraEgo() {
     <div style="background:var(--cinza-claro);border-radius:var(--radius-md);padding:16px;margin-bottom:14px;">
       <div style="font-size:0.8rem;color:var(--cinza-escuro);margin-bottom:4px;">Teste de Ego — DJ ${dj} (16 − Ego ${egoAtributo >= 0 ? "+" : ""}${egoAtributo})</div>
       <div style="font-family:var(--fonte-display);font-size:3rem;color:${passou ? "var(--sucesso)" : "var(--erro)"};line-height:1;">${total}</div>
-      <div style="font-size:0.8rem;margin-top:4px;">D12: ${d12}${d6s.length > 0 ? ` + D6s: ${d6s.join("+")}=${somaD6}` : ""}</div>
+      <div style="font-size:0.8rem;margin-top:4px;">D12: ${d12}${d6s.length > 0 ? ` + D6s: ${d6s.join("+")}=${somaD6}` : ""}${penalidade < 0 ? ` ${penalidade} (Ego negativo)` : ""}</div>
     </div>
 
     ${passou ? `
@@ -315,8 +315,12 @@ function abrirModalQuebraEgo() {
       fechar();
       return;
     }
-    // Aplica os efeitos
-    const novoFolego = Math.max(0, (estado.ficha.folegoAtual ?? 6) - 3);
+    // Lê o fôlego atual direto do estado mais recente
+    const folegoAtual = typeof estado.ficha.folegoAtual === "number"
+      ? estado.ficha.folegoAtual
+      : calcFolegoMaximo(estado.ficha.atributos?.destreza || 0);
+    const novoFolego = Math.max(0, folegoAtual - 3);
+
     salvarCampoImediato({
       estadoQuebraEgo: true,
       folegoAtual: novoFolego,
@@ -325,8 +329,12 @@ function abrirModalQuebraEgo() {
         jogadasDebuff,
         bonusDebuff: -2
       }
+    }).then(() => {
+      // Atualiza a UI de status (fôlego, tokens etc.)
+      montarStatus();
+      document.getElementById("toggle-quebra-ego").checked = true;
     });
-    document.getElementById("toggle-quebra-ego").checked = true;
+
     mostrarToast("Quebra de Ego aplicada! −3 Fôlego, 2 Desv. em atributos, −2 Bônus em 3 Jogadas.", "erro");
     fechar();
   });

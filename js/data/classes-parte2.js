@@ -420,6 +420,133 @@ const CLASSES_PARTE2 = [
       bonus: { jogadaAlvo: null, vantagens: 0, bonusFixo: 0, condicao: "Reação de Interceptação; área: Ego DJ20 ou 2 Attr. zerados" }
     },
     porcentagensFluxo: [["Trash Talk", 25], ["Interceptação", 10], ["Análise", 5]]
+  },
+  {
+    id: "resplendor_aereo", nome: "Resplendor Aéreo",
+    flavor: "Seu modo de jogo é focado em pulos extremamente belos e roubos tão maravilhosos quanto você.",
+    pericias: ["2 Vantagens em Interceptação", "1 Vantagem em Roubo"],
+    comBola: {
+      nome: "Posicionamento Glam!", frase: "Eu, tu, nós bota eles no bolso!",
+      desc: "Você faz um Passe Longo com 2 Vantagens. Caso haja sucesso, você e todos seus aliados em até 8m² à sua volta recebem 1 Vantagem e +2 de Bônus em 2 Jogadas à sua escolha por 1D4+1 Rodadas.",
+      distancia: "Distância de Passe / 8 m²", cooldown: 4, duracao: "1D4+1 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum",
+      dadoDuracao: "1D4+1",
+      bonus: { jogadaAlvo: "passe_longo", vantagens: 2, bonusFixo: 0, condicao: "Se ganhar: aliados em 8m² +1V/+2 Bônus em 2 Jogadas" }
+    },
+    semBola: {
+      nome: "Proporções Glam!", frase: "Que vibe nostálgica, lembrei de casa!",
+      desc: "Durante 1D4+1 Rodadas, seus Roubos e Interceptações recebem 2 Vantagens e, sempre que ganhar em um deles, você tem a opção de andar 2m e fazer um Passe Curto garantido.",
+      distancia: "Pessoal", cooldown: 6, duracao: "1D4+1 Rodadas", tipoAcao: "Ação Egoísta",
+      dadoDuracao: "1D4+1",
+      bonus: { jogadaAlvo: "roubo", vantagens: 2, bonusFixo: 0, condicao: "Também +2V em Interceptação; ganhar = +2m e Passe Curto" }
+    },
+    variavel: {
+      nome: "Taekwondo Glam!", frase: "Acha que tá indo pra onde, bonitinho?",
+      desc: "Você cria uma área de 4x4 à sua volta. Quando um alvo entrar nessa área e depois tentar fugir, ele deverá fazer um Teste de Robustez contra um Teste de Destreza seu; caso falhe, ficará preso nessa área, tendo que refazer o Teste na próxima Rodada caso ainda queira fugir. Essa área dura quantas Rodadas desejar, mas você deve gastar sua Ação de Movimento para cada Rodada ativa.",
+      distancia: "4x4", cooldown: 9, duracao: "Livre (gasta Ação de Movimento/Rodada)", tipoAcao: "Ação Egoísta (+ Ação de Movimento por Rodada ativa)", tipoVariavel: "fluxo",
+      bonus: { jogadaAlvo: null, vantagens: 0, bonusFixo: 0, condicao: "Alvos que tentem fugir: Robustez vs Destreza sua" }
+    },
+    fluxo: {
+      nome: "Destruindo com Glam!", frase: "Me mostre a chave pro seu resplendor maior!",
+      desc: "Você faz uma Interceptação com +10 de Bônus e, caso intercepte, faz um Passe Longo garantido para qualquer aliado no alcance. Essa habilidade pode ser usada até 3 vezes no Fluxo.",
+      distancia: "Pessoal", cooldown: "3 por Fluxo", duracao: "1 Rodada", tipoAcao: "Ação Egoísta + Reação",
+      bonus: { jogadaAlvo: "interceptacao", vantagens: 0, bonusFixo: 10, condicao: "Se interceptar: Passe Longo garantido" }
+    },
+    porcentagensFluxo: [["Interceptação", 15], ["Roubo", 10], ["Trash Talk", 10]]
+  },
+  {
+    id: "monge_malicioso", nome: "Monge Malicioso",
+    flavor: "Seu modo de jogo é focado em tirar vantagem de seus oponentes no puro jogo sujo, fingindo diversas faltas e mostrando que cair também é importante.",
+    pericias: ["2 Vantagens em Jogo Sujo", "1 Vantagem em Interceptação"],
+    comBola: {
+      nome: "Falsidade no Talo", frase: "Fingir uma falta não é tão difícil assim, não é?!",
+      desc: "Como Reação de um Roubo/Jogo de Corpo contra você, você faz uma Jogada de Jogo Sujo contra o alvo. Caso ganhe, você anula a tentativa dele e ele perde sua próxima Rodada, porém caso você perca essa habilidade receberá +3 Rodadas de Cooldown.",
+      distancia: "Corpo-a-Corpo", cooldown: 6, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação",
+      bonus: { jogadaAlvo: "jogo_sujo", vantagens: 0, bonusFixo: 0, condicao: "Reação de Roubo/J.Corpo; se ganhar: anula e adversário perde Rodada; se perder: +3 Cooldown" }
+    },
+    semBola: {
+      nome: "Milagre do Mais Honrado", frase: "Namaste!",
+      desc: "Ao falhar em um Teste de Roubo/Interceptação, você gasta 2 Tokens de Ego e uma Reação para re-rodar a Jogada com 2 Vantagens e +2 de Bônus.",
+      distancia: "Pessoal", cooldown: 3, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação",
+      bonus: { jogadaAlvo: "roubo", vantagens: 2, bonusFixo: 2, condicao: "Ao falhar em Roubo/Interceptação (gasta 2 Tokens de Ego)" }
+    },
+    variavel: {
+      nome: "Dharma Dourado", frase: "Sorte? Nada disso, é o grande Buda!",
+      desc: "Ao falhar em uma Jogada de J vs J, você pode ativar essa habilidade como Reação, assim fazendo um Jogo Sujo contra todos os alvos em até 3m² com acerto garantido.",
+      distancia: "Pessoal", cooldown: 5, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação", tipoVariavel: "fluxo",
+      bonus: { jogadaAlvo: "jogo_sujo", vantagens: 0, bonusFixo: 0, condicao: "Reação de falha J vs J; Jogo Sujo garantido em 3m²" }
+    },
+    fluxo: {
+      nome: "Os Três Tesouros", frase: "Não chega perto de mim!!",
+      desc: "Você escolhe até 3 alvos para criar uma área de 3m² que os acompanha por 1D6+1 Rodadas. Caso entre em uma dessas áreas, como Reação você pode fazer um Jogo Sujo com 1 Vantagem e +3 de Bônus a quem está com a área. Além disso, caso haja sucesso em tal ato, o acertado também perde -1 Token de Ego adicional e -2 Fôlegos por 1D2+1 Rodadas.",
+      distancia: "3 m²", cooldown: "1 por Fluxo", duracao: "1D6+1 Rodadas", tipoAcao: "Ação Egoísta (+ Reação)",
+      dadoDuracao: "1D6+1",
+      bonus: { jogadaAlvo: "jogo_sujo", vantagens: 1, bonusFixo: 3, condicao: "Reação ao entrar na área; se ganhar: -1 Token e -2 Fôlego" }
+    },
+    porcentagensFluxo: [["Jogo Sujo", 15], ["Interceptação", 10], ["Roubo", 10]]
+  },
+  {
+    id: "matador_realista", nome: "Matador Realista",
+    flavor: "Seu modo de jogo é focado em menosprezar seus oponentes ao ponto de quebrar suas idealizações, mostrando a verdade nua e crua.",
+    pericias: ["2 Vantagens em Trash Talk", "1 Vantagem em Passe Longo"],
+    comBola: {
+      nome: "Fardo Forçado", frase: "Você acredita em destino?",
+      desc: "Você faz um Passe Longo com 2 Vantagens. Caso haja sucesso, escolha um alvo em até 4m² de você para receber Quebra de Ego, porém por apenas 2 Rodadas e depois volta com seus Tokens comuns.",
+      distancia: "Distância de Passe / 4 m²", cooldown: 5, duracao: "2 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum",
+      bonus: { jogadaAlvo: "passe_longo", vantagens: 2, bonusFixo: 0, condicao: "Se ganhar: alvo em 4m² recebe Quebra de Ego por 2 Rodadas" }
+    },
+    semBola: {
+      nome: "Vitória Inevitável", frase: "Não é questão de ser, a questão é que eu já sou.",
+      desc: "Ao um alvo fazer uma Jogada em até 5m², você pode escolher uma habilidade dele para se tornar inutilizável por 3 Rodadas (caso seja uma habilidade ativa no momento, ela retorna ao seu funcionamento comum após as 3 Rodadas).",
+      distancia: "Pessoal", cooldown: 6, duracao: "3 Rodadas", tipoAcao: "Ação Egoísta + Reação",
+      bonus: { jogadaAlvo: null, vantagens: 0, bonusFixo: 0, condicao: "Reação de Jogada em 5m²: trava habilidade do alvo por 3 Rodadas" }
+    },
+    variavel: {
+      nome: "Humilhação Gratuita", frase: "Tenho 1001 motivos para xingar um lixo como VOCÊ.",
+      desc: "Ao ganhar um inimigo com qualquer Jogada de J vs J você pode ativar essa habilidade como Reação, assim fazendo um Passe Longo com 2 Vantagens para um alvo no alcance e escolhe uma habilidade do perdedor para se tornar inutilizável por 4 Rodadas (caso seja uma habilidade ativa no momento, ela retorna ao seu funcionamento comum após as 4 Rodadas).",
+      distancia: "Distância de Passe", cooldown: 8, duracao: "3 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum + Reação", tipoVariavel: "fluxo",
+      bonus: { jogadaAlvo: "passe_longo", vantagens: 2, bonusFixo: 0, condicao: "Reação de vitória J vs J; trava habilidade do perdedor por 4 Rodadas" }
+    },
+    fluxo: {
+      nome: "Engrenagens Minimalistas", frase: "Gente como a gente não nasceu pro 1º lugar...",
+      desc: "Você escolhe 3 alvos para ficarem marcados pelas \"Engrenagens\". Durante 1D4+2 Rodadas, toda vez que desejarem fazer uma ação, antes devem rodar um Teste de Ego com DJ igual sua Visão de Jogo x 8. Caso falhem, perdem sua Ação Comum e não conseguem fazer a ação desejada.",
+      distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D4+2 Rodadas", tipoAcao: "Ação Egoísta",
+      dadoDuracao: "1D4+2",
+      bonus: { jogadaAlvo: null, vantagens: 0, bonusFixo: 0, condicao: "3 alvos: Teste Ego DJ (Visão x 8) ou perdem Ação Comum" }
+    },
+    porcentagensFluxo: [["Trash Talk", 15], ["Passe Longo", 10], ["Interceptação", 10]]
+  },
+  {
+    id: "estrela_resiliente", nome: "Estrela Resiliente",
+    flavor: "Seu modo de jogo é focado em ser apenas do seu time, não como dependência, mas como alguém que QUER evoluir.",
+    pericias: ["2 Vantagens em Passe Curto", "1 Vantagem em Roubo"],
+    comBola: {
+      nome: "Esforço Possessivo", frase: "Você agora é minha propriedade",
+      desc: "Você escolhe um aliado e cria uma área de 4x4 em 6+ metros de distância dele. Caso ele entre nessa área, você pode fazer um Passe Longo com 3 Vantagens como Reação que ignora distâncias, mas gasta sua próxima Rodada.",
+      distancia: "6+ m²", cooldown: 6, duracao: "Instantâneo", tipoAcao: "Ação Egoísta (+ Reação)",
+      bonus: { jogadaAlvo: "passe_longo", vantagens: 3, bonusFixo: 0, condicao: "Reação quando aliado entra na área (ignora distância, gasta próxima Rodada)" }
+    },
+    semBola: {
+      nome: "Trabalho Duro", frase: "O segredo é não apenas se esforçar, mas ultrapassar 101% dos seus limites!",
+      desc: "Você escolhe duas Perícias que não tenha. Durante 1D6 + Visão de Jogo Rodadas, uma delas será Perícia Única e a outra será uma Perícia Dupla.",
+      distancia: "Pessoal", cooldown: 5, duracao: "1D6 + Visão de Jogo Rodadas", tipoAcao: "Ação Egoísta",
+      dadoDuracao: "1D6",
+      bonus: { jogadaAlvo: null, vantagens: 0, bonusFixo: 0, condicao: "2 Perícias temporárias (1 Única + 1 Dupla) por 1D6+Visão Rodadas" }
+    },
+    variavel: {
+      nome: "Mérito Desmerecido", frase: "Mesmo longe dos holofotes, eu ainda tô perto!",
+      desc: "Durante 1D4+2 Rodadas, você e um aliado adjacente ignoram qualquer malefício, seja de Bônus negativo, Desvantagens, menos Fôlegos, etc (exceto distâncias de chute e passe). Ao fim desse modo, você perde sua próxima Rodada (apenas utilizável caso o alvo tenha Perícia em uma mesma que você tenha, mas que seja única).",
+      distancia: "Pessoal", cooldown: 8, duracao: "1D4+2 Rodadas", tipoAcao: "Ação Egoísta", tipoVariavel: "quimica",
+      dadoDuracao: "1D4+2",
+      bonus: { jogadaAlvo: null, vantagens: 0, bonusFixo: 0, condicao: "Você e aliado adjacente imunes a malefícios (exceto distâncias); perde próxima Rodada ao fim" }
+    },
+    fluxo: {
+      nome: "Constância Dependente", frase: "Cem por cento do tempo, eu serei útil!",
+      desc: "Durante 1D6 + Visão de Jogo Rodadas, escolha um alvo para receber o efeito 'Portador': 1) Passes como Reação caso ele entre no alcance; 2) Gastar uma Ação Egoísta para dar apoio moral, dando +1 Vantagem na Jogada atual do alvo; 3) Caso ele se mova adjacente a você, pode gastar 1 Reação + 1 Fôlego para segui-lo, gastando seus fôlegos da próxima Rodada.",
+      distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D6 + Visão de Jogo Rodadas", tipoAcao: "Ação Egoísta",
+      dadoDuracao: "1D6",
+      bonus: { jogadaAlvo: null, vantagens: 1, bonusFixo: 0, condicao: "Alvo 'Portador': Passes como Reação, +1V apoio moral, seguir gastando Fôlego" }
+    },
+    porcentagensFluxo: [["Passe Curto", 15], ["Roubo", 10], ["Análise", 10]]
   }
 ];
 

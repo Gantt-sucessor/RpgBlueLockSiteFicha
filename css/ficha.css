@@ -246,6 +246,36 @@
   margin-top: 2px;
 }
 
+/* --- Bônus das habilidades de classe --- */
+.habilidade-bonus-resumo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 0.82rem;
+}
+.habilidade-bonus-badge {
+  background: #e6f0fb;
+  color: var(--azul-marinho);
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+/* --- Duração ativa de habilidade --- */
+.habilidade-duracao-ativa {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--sucesso);
+  font-weight: 600;
+  background: #e6f4ec;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
 /* --- Histórico de Rolagens --- */
 .lista-historico-rolagens {
   display: flex;

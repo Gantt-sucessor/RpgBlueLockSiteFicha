@@ -93,23 +93,31 @@ function calcularBonusAutomatico(jogadaId, ficha, opcoes = {}) {
     }
   }
 
-  // --- 4. Habilidades de classe com duração ativa ---
-  // Quando o player ativou uma habilidade (ex: Corte de Asfalto) e ela ainda
-  // tem rodadas de duração restantes, o bônus dessa habilidade é somado
-  // automaticamente nas Jogadas relevantes enquanto estiver ativa.
+  // --- 4. Habilidades com duração ativa OU instantâneas recém usadas ---
   (ficha.cooldowns || []).forEach((cd) => {
-    if (!cd.bonusAtivo || !cd.duracaoAtual || cd.duracaoAtual <= 0) return;
+    if (!cd.bonusAtivo) return;
     const b = cd.bonusAtivo;
-    // Verifica se o bônus se aplica a essa jogada específica ou a qualquer jogada
+
+    // Habilidade com duração: só aplica enquanto duracaoAtual > 0
+    const temDuracao = cd.duracaoAtual && cd.duracaoAtual > 0;
+    // Habilidade instantânea recém usada: aplica uma vez (cooldownAtual === cooldownMax, ou seja, acabou de ser ativada)
+    const foiUsadaAgora = b.duracaoUnica && cd.cooldownAtual === cd.cooldownMax && cd.cooldownMax > 0;
+
+    if (!temDuracao && !foiUsadaAgora) return;
+
     const aplicavel = !b.jogadaAlvo || b.jogadaAlvo === jogadaId;
     if (!aplicavel) return;
+
     if (b.vantagens && b.vantagens > 0) {
       vantagens += b.vantagens;
-      fontes.push(`+${b.vantagens}V (${cd.nome} ativa — ${cd.duracaoAtual} rod. restante${cd.duracaoAtual !== 1 ? "s" : ""})`);
+      const label = temDuracao
+        ? `+${b.vantagens}V (${cd.nome} ativa — ${cd.duracaoAtual} rod. restante${cd.duracaoAtual !== 1 ? "s" : ""})`
+        : `+${b.vantagens}V (${cd.nome})`;
+      fontes.push(label);
     }
     if (b.bonusFixo && b.bonusFixo > 0) {
       bonus += b.bonusFixo;
-      fontes.push(`+${b.bonusFixo} Bônus (${cd.nome} ativa)`);
+      fontes.push(`+${b.bonusFixo} Bônus (${cd.nome})`);
     }
   });
 

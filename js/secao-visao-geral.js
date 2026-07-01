@@ -7,7 +7,8 @@ import { criarHexagonoAtributos, atualizarValoresHexagono, ORDEM_ATRIBUTOS } fro
 import { criarStepper, mostrarToast } from "./ui-utils.js";
 import { ATRIBUTOS, CORES_EGO, COR_EGO_HEX, ESTAGIOS, JOGADAS_BASE } from "./data/regras-base.js";
 import {
-  calcDistanciaChute, calcDistanciaPasse, calcFolegoMaximo, calcLimiteTokensEgo
+  calcDistanciaChute, calcDistanciaPasse, calcFolegoMaximo, calcLimiteTokensEgo,
+  textoIndicadorCooldown
 } from "./engine-regras.js";
 import { renderizarListaJogadas, abrirModalRolagem, renderizarCooldowns, nomeAtributoComposto, valorAtributoComposto } from "./render-jogadas.js";
 

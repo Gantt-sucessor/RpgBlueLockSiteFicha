@@ -20,7 +20,7 @@ const CLASSES_PARTE2 = [
       nome: "Direção Contrária", frase: "Seria legal dar seta no trânsito, não é?",
       desc: "Domínio com +3 de Bônus. Sucesso: move 3m à esquerda/direita e Chute Curvo com 2 Vantagens.",
       distancia: "3 m / Distância de Chute", cooldown: 6, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Ação Comum + Reação",
-      bonus: { jogadaAlvo: "chute_curvo", vantagens: 2, bonusFixo: 3, condicao: "Se ganhar Domínio: lateral + Chute Curvo" }
+      bonus: { jogadaAlvo: "dominio", vantagens: 0, bonusFixo: 3, condicao: "Se ganhar: lateral + Chute Curvo com 2V" }
     },
     variavel: {
       nome: "Dribles de Rua", frase: "Finta... Fake... Vamos para a melhor jogada!",
@@ -155,7 +155,7 @@ const CLASSES_PARTE2 = [
       nome: "Latrocínio", frase: "Você acha que merece ter essa bola?",
       desc: "Roubo com 2 Vantagens (3 se for Devorar). Ganhando: avança 3m e Chute Curvo com 2 Vantagens e +3 de Bônus. Gol: recarrega habilidade comum à escolha.",
       distancia: "3 m / Distância de Chute", cooldown: 6, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Ação Comum", tipoVariavel: "fluxo",
-      bonus: { jogadaAlvo: "chute_curvo", vantagens: 2, bonusFixo: 3, condicao: "Após Roubo/Devorar; gol recarrega habilidade" }
+      bonus: { jogadaAlvo: "roubo", vantagens: 2, bonusFixo: 0, condicao: "Se ganhar: Chute Curvo 2V/+3 e gol recarrega habilidade" }
     },
     fluxo: {
       nome: "Destruição de Pontos Fracos", frase: "Você tem um ponto fraco. Todo mundo tem.",
@@ -277,7 +277,7 @@ const CLASSES_PARTE2 = [
       nome: "Impact Beinschuss", frase: "Esse chute é o fim.",
       desc: "Após Domínio bem-sucedido, ative como Reação: avança 4m. Encontrando alvo, Destreza com 2 Vantagens ao invés de Drible. Ganhando, vai para trás do alvo e Knuckleball com 2 Vantagens e +3 de Bônus.",
       distancia: "4 m / Distância de Chute", cooldown: 5, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação",
-      bonus: { jogadaAlvo: "knuckleball", vantagens: 2, bonusFixo: 3, condicao: "Reação de Domínio; Destreza em vez de Drible" }
+      bonus: { jogadaAlvo: null, vantagens: 2, bonusFixo: 3, condicao: "Reação de Domínio: disputa com Destreza 2V; se ganhar, Knuckleball 2V/+3" }
     },
     variavel: {
       nome: "A Rosa Azul Desabrocha", frase: "O verdadeiro poder do Imperador desperta.",

@@ -259,14 +259,29 @@ function abrirModalQuebraEgo() {
   const egoAtributo = estado.ficha.atributos.ego || 0;
   const dj = 16 - egoAtributo;
 
-  // Rola o D12 + D6s de Ego (só se Ego for positivo)
-  const d12 = Math.floor(Math.random() * 12) + 1;
-  const qtdD6 = Math.max(0, egoAtributo); // Ego negativo = sem D6s extras
+  // Rola o teste de Ego:
+  // Ego positivo: D12 + D6 por ponto (soma tudo)
+  // Ego 0: só D12
+  // Ego negativo: rola D12s extras (1 por ponto negativo + o base) e pega o menor
+  const qtdD12 = egoAtributo < 0 ? (1 + Math.abs(egoAtributo)) : 1;
+  const qtdD6 = Math.max(0, egoAtributo);
+
+  const todosD12 = Array.from({ length: qtdD12 }, () => Math.floor(Math.random() * 12) + 1);
   const d6s = Array.from({ length: qtdD6 }, () => Math.floor(Math.random() * 6) + 1);
-  const somaD6 = d6s.reduce((a, b) => a + b, 0);
-  // Ego negativo subtrai do total (cada ponto negativo = -1 no resultado)
-  const penalidade = egoAtributo < 0 ? egoAtributo : 0;
-  const total = d12 + somaD6 + penalidade;
+
+  let total;
+  let descricaoDados;
+
+  if (egoAtributo >= 0) {
+    const d12 = todosD12[0];
+    const somaD6 = d6s.reduce((a, b) => a + b, 0);
+    total = d12 + somaD6;
+    descricaoDados = `D12: ${d12}${d6s.length > 0 ? ` + D6s: ${d6s.join("+")}=${somaD6}` : ""}`;
+  } else {
+    total = Math.min(...todosD12);
+    descricaoDados = `${qtdD12}D12: [${todosD12.join(", ")}] → pega o menor (${total})`;
+  }
+
   const passou = total >= dj;
 
   // Sorteia 3 jogadas aleatórias diferentes para o debuff (se falhar)
@@ -284,7 +299,7 @@ function abrirModalQuebraEgo() {
     <div style="background:var(--cinza-claro);border-radius:var(--radius-md);padding:16px;margin-bottom:14px;">
       <div style="font-size:0.8rem;color:var(--cinza-escuro);margin-bottom:4px;">Teste de Ego — DJ ${dj} (16 − Ego ${egoAtributo >= 0 ? "+" : ""}${egoAtributo})</div>
       <div style="font-family:var(--fonte-display);font-size:3rem;color:${passou ? "var(--sucesso)" : "var(--erro)"};line-height:1;">${total}</div>
-      <div style="font-size:0.8rem;margin-top:4px;">D12: ${d12}${d6s.length > 0 ? ` + D6s: ${d6s.join("+")}=${somaD6}` : ""}${penalidade < 0 ? ` ${penalidade} (Ego negativo)` : ""}</div>
+      <div style="font-size:0.8rem;margin-top:4px;">${descricaoDados}</div>
     </div>
 
     ${passou ? `

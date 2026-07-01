@@ -2,7 +2,7 @@
 // FÓRMULA DO EGO — Classes (parte 2 de 2)
 // ============================================================
 
-import { CLASSES_PARTE1 } from "./classes-parte1.js";
+import { CLASSES_PARTE1 } from ".data/classes-parte1.js";
 
 const CLASSES_PARTE2 = [
   {

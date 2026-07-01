@@ -7,6 +7,7 @@ import { obterCampanha, entrarNaCampanha, salvarFicha } from "./store.js";
 import { listarFichasDoUsuario } from "./store.js";
 import { criarFichaVazia } from "./modelo-ficha.js";
 import { mostrarToast, escaparHtml } from "./ui-utils.js";
+import "./tema.js";
 
 const params = new URLSearchParams(window.location.search);
 const campanhaId = params.get("campanha");

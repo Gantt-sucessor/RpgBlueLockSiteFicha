@@ -241,7 +241,10 @@
   min-width: 2.4ch;
   text-align: center;
 }
-.item-cooldown.pronto .item-cooldown-badge { background: var(--sucesso); }
+.item-cooldown-indicador {
+  font-size: 0.74rem;
+  margin-top: 2px;
+}
 
 /* --- Histórico de Rolagens --- */
 .lista-historico-rolagens {

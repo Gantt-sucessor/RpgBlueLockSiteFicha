@@ -9,6 +9,7 @@ import { SINGULARIDADES_MAXIMAS } from "./data/singularidades.js";
 import { CATEGORIA_PRINCIPAL } from "./data/essencias.js";
 import { renderizarDetalheClasse, renderizarDetalheSingularidade, renderizarDetalheCategoria } from "./render-classe.js";
 import { JOGADAS_BASE } from "./data/regras-base.js";
+import { abrirModalRolagem, valorAtributoComposto } from "./render-jogadas.js";
 
 // ----------------------------------------------------------------
 // Categoria principal
@@ -150,10 +151,10 @@ function ativarHabilidadeInstantanea(habilidade, origem) {
   const turnoAtual = (estado.campanha?.turnoAtualIndex ?? 0) + 1;
   const rodadaAtual = estado.campanha?.rodadaAtual ?? 1;
 
+  // Registra o cooldown imediatamente
   const cooldowns = [...(estado.ficha.cooldowns || [])];
   const id = habilidade.nome.toLowerCase().replace(/\s+/g, "-");
   const existente = cooldowns.find(c => c.id === id);
-
   const entrada = {
     id,
     nome: habilidade.nome,
@@ -166,27 +167,50 @@ function ativarHabilidadeInstantanea(habilidade, origem) {
     usadoNaRodada: rodadaAtual,
     disponivelNaTurno: turnoAtual,
     disponivelNaRodada: rodadaAtual + (typeof habilidade.cooldown === "number" ? habilidade.cooldown : 0),
-    bonusAtivo: habilidade.bonus || null
+    bonusAtivo: null // instantânea: bônus não persistem entre turnos
   };
+  if (existente) { Object.assign(existente, entrada); } else { cooldowns.push(entrada); }
+  salvarCampoImediato({ cooldowns });
 
-  if (existente) {
-    Object.assign(existente, entrada);
-  } else {
-    cooldowns.push(entrada);
+  // Se a habilidade tem uma Jogada alvo com bônus, abre o modal de rolagem direto
+  const b = habilidade.bonus;
+  if (b && b.jogadaAlvo && (b.vantagens > 0 || b.bonusFixo > 0)) {
+    const jogadaObj = JOGADAS_BASE.find(j => j.id === b.jogadaAlvo);
+    if (jogadaObj) {
+      const atributoValor = valorAtributoComposto(jogadaObj.atributo, estado.ficha.atributos);
+
+      // Calcula bônus automáticos normais (perícias de classe etc.) + bônus desta habilidade
+      const fontesExtra = [];
+      if (b.vantagens > 0) fontesExtra.push(`+${b.vantagens}V (${habilidade.nome})`);
+      if (b.bonusFixo > 0) fontesExtra.push(`+${b.bonusFixo} Bônus (${habilidade.nome})`);
+
+      abrirModalRolagem({
+        titulo: `${habilidade.nome} → ${jogadaObj.nome}`,
+        atributoValor,
+        jogadaId: b.jogadaAlvo,
+        ficha: estado.ficha,
+        vantagensIniciais: b.vantagens || 0,
+        bonusInicial: b.bonusFixo || 0,
+        registrarRolagem: (dados) => {
+          // Salva no histórico da ficha
+          const entrada2 = { ...dados, titulo: `${habilidade.nome} (${jogadaObj.nome})` };
+          const hist = [entrada2, ...(estado.ficha.historicoRolagens || [])].slice(0, 15);
+          salvarCampoImediato({ historicoRolagens: hist });
+        }
+      });
+      return;
+    }
   }
 
-  // Mostra resumo dos bônus desta jogada instantânea
-  const b = habilidade.bonus;
+  // Sem Jogada alvo definida: só mostra toast com resumo dos bônus
   if (b && (b.vantagens > 0 || b.bonusFixo > 0)) {
     const partes = [];
     if (b.vantagens > 0) partes.push(`+${b.vantagens}V`);
     if (b.bonusFixo > 0) partes.push(`+${b.bonusFixo} Bônus`);
-    mostrarToast(`${habilidade.nome}: ${partes.join(", ")}${b.condicao ? " — " + b.condicao : ""}`, "sucesso");
+    mostrarToast(`${habilidade.nome}: ${partes.join(", ")}${b.condicao ? " — " + b.condicao : ""}. Cooldown: ${habilidade.cooldown}.`, "sucesso");
   } else {
     mostrarToast(`${habilidade.nome} usada! Cooldown: ${habilidade.cooldown} rodadas.`, "sucesso");
   }
-
-  salvarCampoImediato({ cooldowns });
 }
 
 // ----------------------------------------------------------------

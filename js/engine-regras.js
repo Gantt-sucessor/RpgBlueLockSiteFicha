@@ -135,21 +135,48 @@ function ativarCooldownHabilidade(habilidade, turnoAtual, rodadaAtual) {
   };
 }
 
-// Chamado quando CHEGA O TURNO do personagem dono do cooldown:
-// decrementa em 1 todos os seus cooldowns ativos
+// Chamado quando CHEGA O TURNO do personagem dono do cooldown.
+// Lógica:
+//   - Se a habilidade tem duração ativa (duracaoAtual > 0): desconta 1 da duração.
+//     Quando a duração chega a 0, inicia o cooldown automaticamente.
+//   - Se a habilidade está em cooldown (cooldownAtual > 0, sem duração): desconta 1 do cooldown.
 function passarTurnoDoCooldown(cooldowns) {
-  return cooldowns.map(h => ({
-    ...h,
-    cooldownAtual: Math.max(0, (h.cooldownAtual || 0) - 1)
-  }));
+  return cooldowns.map(h => {
+    // Habilidade com duração ativa — desconta duração
+    if (h.duracaoAtual && h.duracaoAtual > 0) {
+      const novasDuracao = h.duracaoAtual - 1;
+      return {
+        ...h,
+        duracaoAtual: novasDuracao,
+        // Quando duração zera, inicia o cooldown automaticamente
+        cooldownAtual: novasDuracao <= 0 ? (h.cooldownMax || 0) : 0,
+      };
+    }
+    // Habilidade em cooldown — desconta cooldown
+    return {
+      ...h,
+      cooldownAtual: Math.max(0, (h.cooldownAtual || 0) - 1)
+    };
+  });
 }
 
-// Compatibilidade: mantém passarRodadaCooldowns para fichas antigas sem fila de turnos
+// Compatibilidade: usado no modo sem iniciativa (sem combate formal).
+// Segue a mesma lógica: duração → cooldown automático quando zera.
 function passarRodadaCooldowns(habilidades) {
-  return habilidades.map(h => ({
-    ...h,
-    cooldownAtual: Math.max(0, (h.cooldownAtual || 0) - 1)
-  }));
+  return habilidades.map(h => {
+    if (h.duracaoAtual && h.duracaoAtual > 0) {
+      const novasDuracao = h.duracaoAtual - 1;
+      return {
+        ...h,
+        duracaoAtual: novasDuracao,
+        cooldownAtual: novasDuracao <= 0 ? (h.cooldownMax || 0) : 0,
+      };
+    }
+    return {
+      ...h,
+      cooldownAtual: Math.max(0, (h.cooldownAtual || 0) - 1)
+    };
+  });
 }
 
 // Gera o texto descritivo do indicador visual de cooldown

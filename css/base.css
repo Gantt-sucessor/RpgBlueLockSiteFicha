@@ -32,6 +32,103 @@
   --fonte-corpo: 'Poppins', system-ui, -apple-system, sans-serif;
 }
 
+/* ============================================================
+   MODO NOTURNO — sobrescreve as variáveis de cor
+   ============================================================ */
+[data-tema="escuro"] {
+  --branco: #1a1f2e;
+  --cinza-claro: #12161f;
+  --cinza-medio: #2e3650;
+  --cinza-escuro: #a0a8c8;
+  --preto-texto: #e8ecf4;
+  --azul-marinho: #4a7fc1;
+  --azul-marinho-claro: #6b9fd4;
+  --azul-marinho-escuro: #2a5a9f;
+  --sombra: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --sombra-forte: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+[data-tema="escuro"] body {
+  background: #0d1117;
+}
+
+[data-tema="escuro"] .card {
+  background: #1a1f2e;
+  border: 1px solid #2e3650;
+}
+
+[data-tema="escuro"] .btn-secundario {
+  background: #1a1f2e;
+  border-color: var(--azul-marinho);
+}
+
+[data-tema="escuro"] input,
+[data-tema="escuro"] select,
+[data-tema="escuro"] textarea {
+  background: #12161f;
+  color: var(--preto-texto);
+  border-color: var(--cinza-medio);
+}
+
+[data-tema="escuro"] .ficha-topbar,
+[data-tema="escuro"] .mestre-topbar,
+[data-tema="escuro"] .home-header {
+  background: #081220;
+}
+
+[data-tema="escuro"] .ficha-abas {
+  background: #1a1f2e;
+  border-bottom-color: #2e3650;
+}
+
+[data-tema="escuro"] .item-cooldown,
+[data-tema="escuro"] .item-historico-rolagem,
+[data-tema="escuro"] .item-ficha-usuario,
+[data-tema="escuro"] .stat-mini,
+[data-tema="escuro"] .resultado-rolagem-grupo,
+[data-tema="escuro"] .card-ficha-jogador-rolagem {
+  background: #12161f;
+}
+
+[data-tema="escuro"] .bonus-automatico-box {
+  background: #0f2318;
+  border-color: #1e4d2e;
+}
+
+[data-tema="escuro"] .roda-atributo-circulo {
+  stroke: #2e3650;
+}
+
+[data-tema="escuro"] .roda-centro-circulo {
+  fill: #1a1f2e;
+}
+
+[data-tema="escuro"] ::-webkit-scrollbar-thumb {
+  background: #2e3650;
+}
+
+/* Botão de tema (lua/sol) — aparece no canto de todas as páginas */
+.btn-tema {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--azul-marinho);
+  color: var(--branco);
+  border: none;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sombra-forte);
+  z-index: 9999;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.btn-tema:hover { background: var(--azul-marinho-claro); transform: scale(1.08); }
+.btn-tema:active { transform: scale(0.95); }
+
 * { box-sizing: border-box; }
 
 /* Garante que o atributo HTML "hidden" sempre vence qualquer display

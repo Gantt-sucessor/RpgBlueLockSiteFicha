@@ -132,7 +132,7 @@ function renderizarFormIniciativa(container) {
       <div class="iniciativa-linha">
         <span class="iniciativa-nome">${escaparHtml(ficha?.nomePersonagem || m.nome)}</span>
         <span class="iniciativa-destreza texto-discreto">DES +${destreza}</span>
-        <input type="number" class="iniciativa-input" data-fichaId="${escaparHtml(m.fichaId)}"
+        <input type="number" class="iniciativa-input" data-ficha-id="${escaparHtml(m.fichaId)}"
           data-uid="${escaparHtml(m.uid)}" data-nome="${escaparHtml(ficha?.nomePersonagem || m.nome)}"
           placeholder="Resultado" value="${iniciativaValor}" min="0">
       </div>
@@ -196,9 +196,9 @@ function renderizarFormIniciativa(container) {
       const val = parseInt(input.value, 10);
       if (!isNaN(val)) {
         players.push({
-          uid: input.dataset.uid,
-          fichaId: input.dataset.fichaId,
-          nome: input.dataset.nome,
+          uid: input.dataset.uid || "",
+          fichaId: input.dataset.fichaId || "",  // browser converte data-ficha-id -> fichaId
+          nome: input.dataset.nome || "Jogador",
           iniciativa: val
         });
       }

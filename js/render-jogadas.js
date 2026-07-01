@@ -192,23 +192,25 @@ function renderizarCooldowns(container, cooldowns, { isMestre, onPassarRodada } 
     container.innerHTML = `<p class="texto-discreto">Nenhuma habilidade em recarga.</p>`;
     return;
   }
-  const ativos = cooldowns.filter(c => c.cooldownAtual > 0);
-  if (ativos.length === 0) {
+  // Mostra habilidades com duração ativa OU em cooldown
+  const visiveis = cooldowns.filter(c => (c.duracaoAtual && c.duracaoAtual > 0) || c.cooldownAtual > 0);
+  if (visiveis.length === 0) {
     container.innerHTML = `<p class="texto-discreto">Todas as habilidades estão prontas para uso.</p>`;
     return;
   }
   container.innerHTML = "";
-  ativos.forEach((cd) => {
+  visiveis.forEach((cd) => {
+    const emDuracao = cd.duracaoAtual && cd.duracaoAtual > 0;
     const div = document.createElement("div");
-    div.className = `item-cooldown`;
+    div.className = `item-cooldown ${emDuracao ? "em-duracao" : ""}`;
     div.innerHTML = `
       <div>
         <span class="item-cooldown-nome">${cd.nome}</span>
         <div class="item-cooldown-indicador texto-discreto">${textoIndicadorCooldown(cd)}</div>
       </div>
       <span class="item-cooldown-info">
-        <span class="item-cooldown-badge">${cd.cooldownAtual}</span>
-        <span class="texto-discreto">/ ${cd.cooldownMax}</span>
+        <span class="item-cooldown-badge ${emDuracao ? "badge-duracao" : ""}">${emDuracao ? cd.duracaoAtual : cd.cooldownAtual}</span>
+        <span class="texto-discreto">${emDuracao ? "dur." : `/ ${cd.cooldownMax}`}</span>
       </span>
     `;
     container.appendChild(div);

@@ -152,7 +152,7 @@ function renderizarFormIniciativa(container) {
   container.innerHTML = `
     <div class="card painel-iniciativa">
       <div class="bloco-cooldowns-header">
-        <h3>⚡ Ordem de Iniciativa</h3>
+        <h3>Ordem de Iniciativa</h3>
         <span class="pill">Destreza rolada</span>
       </div>
       <p class="texto-discreto" style="margin:8px 0 14px;">
@@ -168,7 +168,7 @@ function renderizarFormIniciativa(container) {
       <button class="btn btn-secundario btn-pequeno" id="btn-add-npc" style="margin-top:8px;">+ Adicionar NPC</button>
 
       <button class="btn btn-primario" id="btn-iniciar-combate" style="margin-top:20px;width:100%;">
-        ⚔️ Iniciar Combate
+        Iniciar Jogo
       </button>
     </div>
   `;

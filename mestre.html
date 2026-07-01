@@ -27,11 +27,10 @@
           <span class="texto-discreto" id="texto-rodada-atual">Rodada 1</span>
         </div>
         <div class="mestre-topbar-acoes">
-          <!-- Modo normal -->
-          <button class="btn btn-secundario btn-pequeno" id="btn-voltar-rodada" title="Desfaz a última passagem de rodada">← Turno</button>
-          <button class="btn btn-primario btn-pequeno" id="btn-passar-rodada-mestre">Passar Rodada →</button>
-          <button class="btn btn-perigo btn-pequeno" id="btn-resetar-rodadas" title="Volta para a Rodada 1">↺</button>
+          <!-- Modo normal: só o reset -->
+          <button class="btn btn-perigo btn-pequeno" id="btn-resetar-rodadas" title="Volta para a Rodada 1">↺ Resetar</button>
           <!-- Modo combate -->
+          <button class="btn btn-secundario btn-pequeno" id="btn-voltar-rodada" hidden>← Voltar</button>
           <button class="btn btn-primario" id="btn-proximo-turno" hidden>▶ Próximo Turno</button>
           <button class="btn btn-perigo btn-pequeno" id="btn-encerrar-combate" hidden>✕ Encerrar</button>
         </div>

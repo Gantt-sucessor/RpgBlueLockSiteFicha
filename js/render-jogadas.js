@@ -26,11 +26,14 @@ function renderizarListaJogadas(container, ficha, { onRolar }) {
     const div = document.createElement("div");
     div.className = "item-jogada";
     div.tabIndex = 0;
-    const automatico = calcularBonusAutomatico(jogada.id, ficha);
+    // Para o badge da lista, calcula só com bônus permanentes
+    // (sem cooldowns ativos, que são situacionais)
+    const fichaBase = { ...ficha, cooldowns: [] };
+    const automaticoPermanente = calcularBonusAutomatico(jogada.id, fichaBase);
     div.innerHTML = `
       <span class="item-jogada-nome">${jogada.nome}</span>
       <span class="item-jogada-meta">${nomeAtributoComposto(jogada.atributo)} · DJ ${typeof jogada.dj === "number" ? jogada.dj : jogada.dj}</span>
-      ${automatico.vantagens > 0 ? `<span class="item-jogada-auto">+${automatico.vantagens}V automático</span>` : ""}
+      ${automaticoPermanente.vantagens > 0 ? `<span class="item-jogada-auto">+${automaticoPermanente.vantagens}V automático</span>` : ""}
     `;
     div.addEventListener("click", () => onRolar(jogada));
     div.addEventListener("keydown", (e) => { if (e.key === "Enter") onRolar(jogada); });
@@ -48,12 +51,25 @@ function abrirModalRolagem({ titulo, atributoValor, jogadaId, ficha, vantagensIn
   let desv = desvantagensIniciais + automatico.desvantagens;
   let corOponenteSelecionada = "";
 
+  // Separa fontes positivas (verde) de negativas/debuffs (vermelho)
+  const fontesPositivas = automatico.fontes.filter(f => !f.includes("Quebra de Ego") && !f.startsWith("-"));
+  const fontesNegativas = automatico.fontes.filter(f => f.includes("Quebra de Ego") || f.startsWith("-"));
+
+  // Ajusta o bônus inicial com o debuff automático
+  const bonusComDebuff = bonusInicial + (automatico.bonus || 0);
+
   const wrap = document.createElement("div");
   wrap.innerHTML = `
-    ${automatico.fontes.length > 0 ? `
+    ${fontesPositivas.length > 0 ? `
       <div class="bonus-automatico-box">
         <strong>Já incluso automaticamente:</strong>
-        <ul>${automatico.fontes.map(f => `<li>${f}</li>`).join("")}</ul>
+        <ul>${fontesPositivas.map(f => `<li>${f}</li>`).join("")}</ul>
+      </div>
+    ` : ""}
+    ${fontesNegativas.length > 0 ? `
+      <div class="bonus-automatico-box bonus-debuff-box">
+        <strong>⚠️ Debuffs ativos (Quebra de Ego):</strong>
+        <ul>${fontesNegativas.map(f => `<li>${f}</li>`).join("")}</ul>
       </div>
     ` : ""}
     ${automatico.elegivelParaCorEgo ? `
@@ -72,7 +88,7 @@ function abrirModalRolagem({ titulo, atributoValor, jogadaId, ficha, vantagensIn
     </div>
     <div class="form-grupo">
       <label>Bônus fixo (some ao resultado final)</label>
-      <input type="number" id="input-bonus" value="${bonusInicial}">
+      <input type="number" id="input-bonus" value="${bonusComDebuff}">
     </div>
     <button class="btn btn-primario" id="btn-confirmar-rolagem" style="width:100%;">🎲 Rolar</button>
     <div id="area-resultado"></div>

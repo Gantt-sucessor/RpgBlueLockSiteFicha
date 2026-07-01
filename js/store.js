@@ -117,6 +117,66 @@ async function resetarRodadas(campanhaId) {
   return 1;
 }
 
+// --- Iniciativa e Turnos ---
+
+// Inicia o combate: monta a fila de turnos ordenada por iniciativa (desc)
+// players: [{ uid, fichaId, nome, iniciativa }]
+// npcs: [{ id, nome, iniciativa }]
+async function iniciarCombate(campanhaId, players, npcs) {
+  const fila = [
+    ...players.map(p => ({ ...p, tipo: "player" })),
+    ...npcs.map(n => ({ ...n, uid: `npc_${n.id}`, fichaId: null, tipo: "npc" }))
+  ].sort((a, b) => b.iniciativa - a.iniciativa);
+
+  await updateDoc(doc(db, COL_CAMPANHAS, campanhaId), {
+    combateAtivo: true,
+    filaTurnos: fila,
+    turnoAtualIndex: 0,
+    npcsIniciativa: npcs,
+    atualizadoEm: serverTimestamp()
+  });
+}
+
+// Avança para o próximo turno na fila.
+// Quando passa do último, começa nova rodada e volta ao primeiro.
+// Também desconta o cooldown do personagem cujo turno acabou.
+async function proximoTurno(campanhaId, campanha, fichasMap, atualizarCampoFichaFn, passarTurnoDoCooldownFn) {
+  const fila = campanha.filaTurnos || [];
+  if (fila.length === 0) return;
+
+  const indexAtual = campanha.turnoAtualIndex || 0;
+  const personagemAtual = fila[indexAtual];
+
+  // Desconta cooldown do personagem que acabou de ter o turno
+  if (personagemAtual?.tipo === "player" && personagemAtual.fichaId) {
+    const fichaRaw = fichasMap[personagemAtual.fichaId];
+    if (fichaRaw) {
+      const novoCooldown = passarTurnoDoCooldownFn(fichaRaw.cooldowns || []);
+      await atualizarCampoFichaFn(personagemAtual.fichaId, { cooldowns: novoCooldown });
+    }
+  }
+
+  const proximoIndex = indexAtual + 1;
+  const novaRodada = proximoIndex >= fila.length;
+  const novoIndex = novaRodada ? 0 : proximoIndex;
+
+  await updateDoc(doc(db, COL_CAMPANHAS, campanhaId), {
+    turnoAtualIndex: novoIndex,
+    rodadaAtual: novaRodada ? (campanha.rodadaAtual || 1) + 1 : (campanha.rodadaAtual || 1),
+    atualizadoEm: serverTimestamp()
+  });
+}
+
+// Encerra o combate e limpa a fila de turnos
+async function encerrarCombate(campanhaId) {
+  await updateDoc(doc(db, COL_CAMPANHAS, campanhaId), {
+    combateAtivo: false,
+    filaTurnos: [],
+    turnoAtualIndex: 0,
+    atualizadoEm: serverTimestamp()
+  });
+}
+
 async function listarCampanhasDoMestre(uid) {
   const q = query(collection(db, COL_CAMPANHAS), where("uidMestre", "==", uid));
   const snap = await getDocs(q);
@@ -181,6 +241,7 @@ async function excluirFicha(fichaId) {
 export {
   criarCampanha, buscarCampanhaPorCodigo, obterCampanha, escutarCampanha,
   entrarNaCampanha, removerMembroCampanha, passarRodada, voltarRodada, resetarRodadas,
+  iniciarCombate, proximoTurno, encerrarCombate,
   listarCampanhasDoMestre, salvarFicha, atualizarCampoFicha, obterFicha, escutarFicha,
   listarFichasDoUsuario, escutarFichasMultiplas, excluirFicha
 };

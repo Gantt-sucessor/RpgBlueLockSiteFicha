@@ -124,11 +124,10 @@ function ativarHabilidadeComDuracao(habilidade, origem, duracao) {
     nome: habilidade.nome,
     origem,
     cooldownMax: typeof habilidade.cooldown === "number" ? habilidade.cooldown : 0,
-    cooldownAtual: typeof habilidade.cooldown === "number" ? habilidade.cooldown : 0,
-    // Duração da habilidade (diferente do cooldown — conta quantos turnos ainda está ativa)
+    // cooldownAtual começa em 0 — só inicia quando a duração acabar
+    cooldownAtual: 0,
     duracaoAtual: duracao,
     duracaoMax: duracao,
-    // Para indicador visual
     usadoNaTurno: turnoAtual,
     usadoNaRodada: rodadaAtual,
     disponivelNaTurno: turnoAtual,

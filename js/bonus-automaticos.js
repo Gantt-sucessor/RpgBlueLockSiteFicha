@@ -121,6 +121,20 @@ function calcularBonusAutomatico(jogadaId, ficha, opcoes = {}) {
     }
   });
 
+  // --- 5. Debuffs da Quebra de Ego ---
+  if (ficha.estadoQuebraEgo && ficha.quebraEgoEfeitos) {
+    const ef = ficha.quebraEgoEfeitos;
+    // -2 de Bônus nas 3 Jogadas sorteadas
+    if (ef.jogadasDebuff && ef.bonusDebuff) {
+      const jogadaObj = JOGADAS_BASE.find(j => j.id === jogadaId);
+      if (jogadaObj && ef.jogadasDebuff.includes(jogadaObj.nome)) {
+        bonus += ef.bonusDebuff; // valor negativo, ex: -2
+        fontes.push(`${ef.bonusDebuff} Bônus (Quebra de Ego)`);
+        desvantagens += ef.desvantagensAtributo || 0;
+      }
+    }
+  }
+
   return { vantagens, desvantagens, bonus, fontes, elegivelParaCorEgo };
 }
 

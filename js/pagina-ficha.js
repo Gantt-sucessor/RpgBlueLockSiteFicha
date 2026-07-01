@@ -11,3 +11,4 @@ import "./secao-ego.js";
 import "./secao-talentos.js";
 import "./secao-fluxo.js";
 import "./secao-anotacoes.js";
+import "./tema.js";

@@ -179,22 +179,33 @@ function ativarHabilidadeInstantanea(habilidade, origem) {
     if (jogadaObj) {
       const atributoValor = valorAtributoComposto(jogadaObj.atributo, estado.ficha.atributos);
 
-      // Calcula bônus automáticos normais (perícias de classe etc.) + bônus desta habilidade
-      const fontesExtra = [];
-      if (b.vantagens > 0) fontesExtra.push(`+${b.vantagens}V (${habilidade.nome})`);
-      if (b.bonusFixo > 0) fontesExtra.push(`+${b.bonusFixo} Bônus (${habilidade.nome})`);
+      // Cria uma ficha temporária com os bônus desta habilidade já embutidos
+      // como um "cooldown ativo" para que calcularBonusAutomatico os inclua
+      // na caixa verde do modal junto com os outros bônus automáticos
+      const fichaComBonus = {
+        ...estado.ficha,
+        cooldowns: [
+          ...(estado.ficha.cooldowns || []),
+          {
+            id: `__habilidade_${id}`,
+            nome: habilidade.nome,
+            duracaoAtual: 1, // simula "ativa agora" para o cálculo
+            cooldownAtual: 0,
+            bonusAtivo: { ...b }
+          }
+        ]
+      };
 
       abrirModalRolagem({
         titulo: `${habilidade.nome} → ${jogadaObj.nome}`,
         atributoValor,
         jogadaId: b.jogadaAlvo,
-        ficha: estado.ficha,
-        vantagensIniciais: b.vantagens || 0,
-        bonusInicial: b.bonusFixo || 0,
+        ficha: fichaComBonus,
         registrarRolagem: (dados) => {
-          // Salva no histórico da ficha
-          const entrada2 = { ...dados, titulo: `${habilidade.nome} (${jogadaObj.nome})` };
-          const hist = [entrada2, ...(estado.ficha.historicoRolagens || [])].slice(0, 15);
+          const hist = [
+            { ...dados, titulo: `${habilidade.nome} (${jogadaObj.nome})` },
+            ...(estado.ficha.historicoRolagens || [])
+          ].slice(0, 15);
           salvarCampoImediato({ historicoRolagens: hist });
         }
       });

@@ -4,7 +4,7 @@
 
 import { estado, salvarCampo, salvarCampoImediato, registrarListenerAtualizacao } from "./ficha-core.js";
 import { criarHexagonoAtributos, atualizarValoresHexagono, ORDEM_ATRIBUTOS } from "./hexagono.js";
-import { criarStepper, mostrarToast } from "./ui-utils.js";
+import { criarStepper, mostrarToast, abrirModal } from "./ui-utils.js";
 import { ATRIBUTOS, CORES_EGO, COR_EGO_HEX, ESTAGIOS, JOGADAS_BASE } from "./data/regras-base.js";
 import {
   calcDistanciaChute, calcDistanciaPasse, calcFolegoMaximo, calcLimiteTokensEgo,
@@ -135,7 +135,18 @@ function montarStatus() {
 
   const toggleQuebra = document.getElementById("toggle-quebra-ego");
   toggleQuebra.checked = !!estado.ficha.estadoQuebraEgo;
-  toggleQuebra.addEventListener("change", () => salvarCampo({ estadoQuebraEgo: toggleQuebra.checked }));
+  toggleQuebra.addEventListener("change", () => {
+    if (!toggleQuebra.checked) {
+      // Desativando — encerra a Quebra de Ego
+      salvarCampo({ estadoQuebraEgo: false, quebraEgoEfeitos: null });
+      mostrarToast("Quebra de Ego encerrada.", "sucesso");
+      return;
+    }
+    // Ativando — rola o teste
+    abrirModalQuebraEgo();
+    // Reverte o toggle enquanto o modal está aberto
+    toggleQuebra.checked = false;
+  });
 
   atualizarTextoLimiteTokens();
   atualizarTextoMaxFolego();
@@ -239,6 +250,85 @@ function montarHistoricoRolagens() {
       <span class="item-historico-meta">${r.vantagens}V/${r.desvantagens}D · ${hora}${r.execucao ? ` · ⚡${r.execucao}` : ""}</span>
     `;
     container.appendChild(div);
+  });
+}
+
+// ----------------------------------------------------------------
+// Quebra de Ego — rolagem automática com efeitos
+// ----------------------------------------------------------------
+function abrirModalQuebraEgo() {
+  const egoAtributo = estado.ficha.atributos.ego || 0;
+  const dj = 16 - egoAtributo;
+
+  // Rola o D12 + D6s de Ego
+  const d12 = Math.floor(Math.random() * 12) + 1;
+  const d6s = egoAtributo > 0
+    ? Array.from({ length: egoAtributo }, () => Math.floor(Math.random() * 6) + 1)
+    : [];
+  const somaD6 = d6s.reduce((a, b) => a + b, 0);
+  const total = d12 + somaD6;
+  const passou = total >= dj;
+
+  // Sorteia 3 jogadas aleatórias diferentes para o debuff (se falhar)
+  const JOGADAS_NOMES = JOGADAS_BASE.map(j => j.nome);
+  const jogadasDebuff = [];
+  const pool = [...JOGADAS_NOMES];
+  for (let i = 0; i < 3 && pool.length > 0; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    jogadasDebuff.push(pool.splice(idx, 1)[0]);
+  }
+
+  const wrap = document.createElement("div");
+  wrap.style.textAlign = "center";
+  wrap.innerHTML = `
+    <div style="background:var(--cinza-claro);border-radius:var(--radius-md);padding:16px;margin-bottom:14px;">
+      <div style="font-size:0.8rem;color:var(--cinza-escuro);margin-bottom:4px;">Teste de Ego — DJ ${dj} (16 − Ego ${egoAtributo >= 0 ? "+" : ""}${egoAtributo})</div>
+      <div style="font-family:var(--fonte-display);font-size:3rem;color:${passou ? "var(--sucesso)" : "var(--erro)"};line-height:1;">${total}</div>
+      <div style="font-size:0.8rem;margin-top:4px;">D12: ${d12}${d6s.length > 0 ? ` + D6s: ${d6s.join("+")}=${somaD6}` : ""}</div>
+    </div>
+
+    ${passou ? `
+      <div style="background:#e6f4ec;border-radius:var(--radius-md);padding:14px;color:var(--sucesso);">
+        <strong>✅ Passou! (${total} ≥ ${dj})</strong><br>
+        <span style="font-size:0.85rem;">Nenhum efeito de Quebra de Ego.</span>
+      </div>
+      <button class="btn btn-primario" id="btn-confirmar-quebra" style="width:100%;margin-top:12px;">OK</button>
+    ` : `
+      <div style="background:#fde8e8;border-radius:var(--radius-md);padding:14px;color:var(--erro);text-align:left;">
+        <strong>❌ Falhou! (${total} < ${dj}) — Quebra de Ego!</strong>
+        <ul style="margin:8px 0 0;padding-left:18px;font-size:0.85rem;">
+          <li>2 Desvantagens em qualquer Atributo</li>
+          <li>−3 Fôlegos imediatamente</li>
+          <li>−2 Bônus em: <strong>${jogadasDebuff.join(", ")}</strong></li>
+        </ul>
+      </div>
+      <button class="btn btn-primario" id="btn-confirmar-quebra" style="width:100%;margin-top:12px;background:var(--erro);">
+        Aplicar Quebra de Ego
+      </button>
+    `}
+  `;
+
+  const { fechar } = abrirModal({ titulo: "💔 Teste de Quebra de Ego", conteudoEl: wrap });
+
+  wrap.querySelector("#btn-confirmar-quebra").addEventListener("click", () => {
+    if (passou) {
+      fechar();
+      return;
+    }
+    // Aplica os efeitos
+    const novoFolego = Math.max(0, (estado.ficha.folegoAtual ?? 6) - 3);
+    salvarCampoImediato({
+      estadoQuebraEgo: true,
+      folegoAtual: novoFolego,
+      quebraEgoEfeitos: {
+        desvantagensAtributo: 2,
+        jogadasDebuff,
+        bonusDebuff: -2
+      }
+    });
+    document.getElementById("toggle-quebra-ego").checked = true;
+    mostrarToast("Quebra de Ego aplicada! −3 Fôlego, 2 Desv. em atributos, −2 Bônus em 3 Jogadas.", "erro");
+    fechar();
   });
 }
 

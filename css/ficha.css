@@ -245,6 +245,9 @@
   font-size: 0.74rem;
   margin-top: 2px;
 }
+.item-cooldown.em-duracao { background: #0f2318; border: 1px solid #1e4d2e; }
+[data-tema="escuro"] .item-cooldown.em-duracao { background: #0a1a10; }
+.badge-duracao { background: var(--sucesso) !important; }
 
 /* --- Bônus das habilidades de classe --- */
 .habilidade-bonus-resumo {

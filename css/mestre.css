@@ -6,6 +6,107 @@
   background: var(--azul-marinho);
   padding: 16px 0;
 }
+.mestre-topbar-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* --- Painel de Iniciativa --- */
+.painel-iniciativa { margin-bottom: 24px; }
+
+.lista-iniciativa-players { display: flex; flex-direction: column; gap: 8px; }
+
+.iniciativa-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--cinza-claro);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+.iniciativa-nome { font-weight: 700; flex: 1; min-width: 120px; }
+.iniciativa-destreza { font-size: 0.8rem; }
+.iniciativa-input, .npc-iniciativa-input {
+  width: 90px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--cinza-medio);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.npc-nome-input {
+  flex: 1;
+  min-width: 120px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--cinza-medio);
+  border-radius: var(--radius-sm);
+}
+
+/* --- Fila de turnos (combate ativo) --- */
+.lista-turnos { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+
+.item-turno {
+  border: 2px solid var(--cinza-medio);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  background: var(--branco);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.item-turno.turno-ativo {
+  border-color: var(--azul-marinho);
+  background: #eef3fb;
+  box-shadow: 0 0 0 3px rgba(13,44,107,0.12);
+}
+[data-tema="escuro"] .item-turno.turno-ativo {
+  background: #1a2540;
+}
+.item-turno.turno-npc { border-style: dashed; }
+
+.item-turno-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.item-turno-pos {
+  font-family: var(--fonte-display);
+  font-size: 1.2rem;
+  color: var(--cinza-escuro);
+  min-width: 28px;
+}
+.item-turno-nome {
+  font-weight: 700;
+  font-size: 1rem;
+  flex: 1;
+  color: var(--azul-marinho);
+}
+.item-turno-iniciativa { background: var(--azul-marinho); color: white; }
+.pill-player { background: #e6f0fb; color: var(--azul-marinho); }
+.pill-npc { background: #fce8e8; color: var(--erro); }
+.item-turno-atual-badge {
+  font-weight: 800;
+  color: var(--azul-marinho);
+  font-size: 0.82rem;
+  animation: piscar 1.2s ease infinite;
+}
+@keyframes piscar {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.item-turno-cooldowns {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--cinza-claro);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.item-turno-cooldown-linha { font-size: 0.82rem; }
 .mestre-topbar-inner {
   display: flex;
   align-items: center;

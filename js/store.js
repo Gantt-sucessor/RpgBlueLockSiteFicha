@@ -123,16 +123,21 @@ async function resetarRodadas(campanhaId) {
 // players: [{ uid, fichaId, nome, iniciativa }]
 // npcs: [{ id, nome, iniciativa }]
 async function iniciarCombate(campanhaId, players, npcs) {
+  // Remove undefined de qualquer campo antes de salvar (Firestore não aceita undefined)
+  function limpar(obj) {
+    return JSON.parse(JSON.stringify(obj, (k, v) => v === undefined ? null : v));
+  }
+
   const fila = [
-    ...players.map(p => ({ ...p, tipo: "player" })),
-    ...npcs.map(n => ({ ...n, uid: `npc_${n.id}`, fichaId: null, tipo: "npc" }))
+    ...players.map(p => limpar({ ...p, tipo: "player" })),
+    ...npcs.map(n => limpar({ ...n, uid: `npc_${n.id}`, fichaId: null, tipo: "npc" }))
   ].sort((a, b) => b.iniciativa - a.iniciativa);
 
   await updateDoc(doc(db, COL_CAMPANHAS, campanhaId), {
     combateAtivo: true,
     filaTurnos: fila,
     turnoAtualIndex: 0,
-    npcsIniciativa: npcs,
+    npcsIniciativa: npcs.map(n => limpar(n)),
     atualizadoEm: serverTimestamp()
   });
 }

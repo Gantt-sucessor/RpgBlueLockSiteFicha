@@ -97,7 +97,7 @@ const CLASSES_PARTE2 = [
       desc: "Ganhando uma Caneta, ative como Reação: +2 Fôlegos, quem te roubar recebe 2 Desvantagens e -2 de Bônus, e você recebe 1 Vantagem em Análise por 1D4+2 Rodadas.",
       distancia: "Pessoal", cooldown: "1 por Fluxo", duracao: "1D4+2 Rodadas", tipoAcao: "Ação Egoísta + Reação",
       dadoDuracao: "1D4+2",
-      bonus: { jogadaAlvo: "analise", vantagens: 1, bonusFixo: 0, condicao: "Reação de Caneta; roubador: 2Desv./-2 Bônus" }
+      bonus: { jogadaAlvo: "caneta", vantagens: 1, bonusFixo: 0, condicao: "Reação de Caneta; roubador: 2Desv./-2 Bônus; +1V em Análise" }
     },
     porcentagensFluxo: [["Roubo", 25], ["Caneta", 10], ["Destreza (Drible)", 5]]
   },
@@ -117,7 +117,7 @@ const CLASSES_PARTE2 = [
       desc: "Ganhando um Domínio, ative como Reação: +1 Vantagem em Passe Longo e Análise por oponente em 4m² por 1D6+1 Rodadas.",
       distancia: "4 m²", cooldown: 6, duracao: "1D6+1 Rodadas", tipoAcao: "Ação Egoísta + Reação",
       dadoDuracao: "1D6+1",
-      bonus: { jogadaAlvo: "passe_longo", vantagens: 1, bonusFixo: 0, condicao: "+1V/oponente na área em Passe Longo e Análise" }
+      bonus: { jogadaAlvo: "dominio", vantagens: 0, bonusFixo: 0, condicao: "Se ganhar Domínio: +1V/oponente em Passe Longo e Análise" }
     },
     variavel: {
       nome: "Drift em Tokyo", frase: "Acelerando curva!",
@@ -258,7 +258,7 @@ const CLASSES_PARTE2 = [
       nome: "Big Bang Drive", frase: "Essa é a explosão que vai mudar tudo.",
       desc: "Via Passe/Interceptação. Como Reação, avança 3m até a bola. Destreza com 3 Vantagens contra DJ do Passe/Interceptação (22 se aliado). Sucesso: Voleio com 3 Vantagens, +3m e +5 de Bônus.",
       distancia: "3 m / Distância de Chute + 3 m", cooldown: "1 por Fluxo", duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação",
-      bonus: { jogadaAlvo: "voleio", vantagens: 3, bonusFixo: 5, condicao: "Reação de Passe/Interceptação; Destreza 3V contra DJ" }
+      bonus: { jogadaAlvo: null, vantagens: 3, bonusFixo: 5, condicao: "Reação de Passe/Interceptação; disputa Destreza 3V — se ganhar: Voleio 3V/+5" }
     },
     porcentagensFluxo: [["Voleio + Gol", 25], ["Passe Alto + Assistência", 10], ["Cabeceio", 5]]
   },
@@ -366,7 +366,7 @@ const CLASSES_PARTE2 = [
       nome: "Rabona Cross (Foda >:) )", frase: "Essa foi de graça!",
       desc: "Após Caneta bem-sucedida, ative como Reação: Passe Alto com 2 Vantagens e +4 de Bônus em Voleio para o receptor.",
       distancia: "Distância de Passe", cooldown: 4, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Reação",
-      bonus: { jogadaAlvo: "passe_alto", vantagens: 2, bonusFixo: 4, condicao: "Reação de Caneta; receptor +4 Bônus Voleio" }
+      bonus: { jogadaAlvo: "caneta", vantagens: 0, bonusFixo: 0, condicao: "Reação de Caneta: Passe Alto 2V e +4 Bônus Voleio pro receptor" }
     },
     semBola: {
       nome: "Rebote Irritante", frase: "Surprise!",

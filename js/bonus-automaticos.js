@@ -73,8 +73,7 @@ function calcularBonusAutomatico(jogadaId, ficha, opcoes = {}) {
     fontes.push(`+${qtd} Vantagem${qtd > 1 ? "s" : ""} (Perícia de ${classeObj?.nome || "Classe"})`);
   }
 
-  // --- 2. Perícias gerais escolhidas pelo jogador (Estágio Intermediário/Mestre) ---
-  // ficha.pericias: [{ jogadaId, tipo: 'unica' | 'dupla' }]
+  // --- 2. Perícias gerais escolhidas pelo jogador ---
   (ficha.pericias || []).forEach((p) => {
     if (p.jogadaId !== jogadaId) return;
     const qtd = p.tipo === "dupla" ? 2 : 1;
@@ -82,8 +81,7 @@ function calcularBonusAutomatico(jogadaId, ficha, opcoes = {}) {
     fontes.push(`+${qtd} Vantagem${qtd > 1 ? "s" : ""} (Perícia ${p.tipo === "dupla" ? "Dupla" : "Única"})`);
   });
 
-  // --- 3. Cor de Ego (só vale em Devorar, Ego, Roubo/Jogo de Corpo, Interceptação,
-  //         e somente se soubermos a cor do oponente e ela perder pra nossa cor) ---
+  // --- 3. Cor de Ego ---
   const jogadaObj = JOGADAS_BASE.find((j) => j.id === jogadaId);
   const nomeJogadaAtual = jogadaObj?.nome;
   const elegivelParaCorEgo = nomeJogadaAtual && JOGADAS_COR_EGO.includes(nomeJogadaAtual);
@@ -94,6 +92,26 @@ function calcularBonusAutomatico(jogadaId, ficha, opcoes = {}) {
       fontes.push(`+1 Vantagem (Cor de Ego: ${ficha.corEgo} vs ${opcoes.corOponente})`);
     }
   }
+
+  // --- 4. Habilidades de classe com duração ativa ---
+  // Quando o player ativou uma habilidade (ex: Corte de Asfalto) e ela ainda
+  // tem rodadas de duração restantes, o bônus dessa habilidade é somado
+  // automaticamente nas Jogadas relevantes enquanto estiver ativa.
+  (ficha.cooldowns || []).forEach((cd) => {
+    if (!cd.bonusAtivo || !cd.duracaoAtual || cd.duracaoAtual <= 0) return;
+    const b = cd.bonusAtivo;
+    // Verifica se o bônus se aplica a essa jogada específica ou a qualquer jogada
+    const aplicavel = !b.jogadaAlvo || b.jogadaAlvo === jogadaId;
+    if (!aplicavel) return;
+    if (b.vantagens && b.vantagens > 0) {
+      vantagens += b.vantagens;
+      fontes.push(`+${b.vantagens}V (${cd.nome} ativa — ${cd.duracaoAtual} rod. restante${cd.duracaoAtual !== 1 ? "s" : ""})`);
+    }
+    if (b.bonusFixo && b.bonusFixo > 0) {
+      bonus += b.bonusFixo;
+      fontes.push(`+${b.bonusFixo} Bônus (${cd.nome} ativa)`);
+    }
+  });
 
   return { vantagens, desvantagens, bonus, fontes, elegivelParaCorEgo };
 }

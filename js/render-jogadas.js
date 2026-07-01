@@ -3,7 +3,7 @@
 // ============================================================
 
 import { JOGADAS_BASE, ATRIBUTOS, CORES_EGO, COR_EGO_HEX, JOGADAS_COR_EGO } from "./data/regras-base.js";
-import { rolarJogada } from "./engine-regras.js";
+import { rolarJogada, textoIndicadorCooldown } from "./engine-regras.js";
 import { abrirModal } from "./ui-utils.js";
 import { calcularBonusAutomatico } from "./bonus-automaticos.js";
 
@@ -187,29 +187,32 @@ function renderizarResultadoRolagem(container, resultado) {
 }
 
 // --- Cooldowns ---
-function renderizarCooldowns(container, cooldowns, { isMestre, onPassarRodada }) {
+function renderizarCooldowns(container, cooldowns, { isMestre, onPassarRodada } = {}) {
   if (!cooldowns || cooldowns.length === 0) {
     container.innerHTML = `<p class="texto-discreto">Nenhuma habilidade em recarga.</p>`;
     return;
   }
-  container.innerHTML = "";
-  cooldowns
-    .filter(c => c.cooldownAtual > 0)
-    .forEach((cd) => {
-      const div = document.createElement("div");
-      div.className = `item-cooldown ${cd.cooldownAtual === 0 ? "pronto" : ""}`;
-      div.innerHTML = `
-        <span class="item-cooldown-nome">${cd.nome}</span>
-        <span class="item-cooldown-info">
-          <span class="item-cooldown-badge">${cd.cooldownAtual}</span>
-          <span class="texto-discreto">/ ${cd.cooldownMax} rodadas</span>
-        </span>
-      `;
-      container.appendChild(div);
-    });
-  if (container.children.length === 0) {
+  const ativos = cooldowns.filter(c => c.cooldownAtual > 0);
+  if (ativos.length === 0) {
     container.innerHTML = `<p class="texto-discreto">Todas as habilidades estão prontas para uso.</p>`;
+    return;
   }
+  container.innerHTML = "";
+  ativos.forEach((cd) => {
+    const div = document.createElement("div");
+    div.className = `item-cooldown`;
+    div.innerHTML = `
+      <div>
+        <span class="item-cooldown-nome">${cd.nome}</span>
+        <div class="item-cooldown-indicador texto-discreto">${textoIndicadorCooldown(cd)}</div>
+      </div>
+      <span class="item-cooldown-info">
+        <span class="item-cooldown-badge">${cd.cooldownAtual}</span>
+        <span class="texto-discreto">/ ${cd.cooldownMax}</span>
+      </span>
+    `;
+    container.appendChild(div);
+  });
 }
 
 export {

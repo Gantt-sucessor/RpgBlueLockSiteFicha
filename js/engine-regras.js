@@ -109,14 +109,54 @@ function calcFolegoMaximo(destreza) { return 6 + destreza; }
 function calcLimiteTokensEgo(ego) { return 5 + ego; }
 function calcDJQuebraEgo(ego) { return 16 - ego; }
 
-// --- Gestão de Cooldowns ---
-// habilidadesAtivas: array de { id, nome, cooldownAtual, cooldownMax }
-// Ao "passar rodada", decrementa todos os cooldowns ativos em 1 (mínimo 0)
+// --- Gestão de Cooldowns por Turno do Personagem ---
+// Nova estrutura de cooldown:
+// { id, nome, origem, cooldownMax, cooldownAtual,
+//   usadoNaTurno?, usadoNaRodada?, disponivelNaTurno?, disponivelNaRodada? }
+//
+// cooldownAtual: quantos turnos do PRÓPRIO personagem ainda faltam
+// usadoNaTurno/Rodada: quando foi ativado (para o indicador visual)
+// disponivelNaTurno/Rodada: quando volta a ficar disponível
+
+// Cria um registro de cooldown ao ativar uma habilidade
+function ativarCooldownHabilidade(habilidade, turnoAtual, rodadaAtual) {
+  const disponivelNaTurno = turnoAtual; // mesmo turno, mas na próxima ocorrência
+  const rodadasParaVoltar = habilidade.cooldown || habilidade.cooldownMax || 1;
+  return {
+    id: habilidade.id || habilidade.nome.toLowerCase().replace(/\s+/g, "-"),
+    nome: habilidade.nome,
+    origem: habilidade.origem || "",
+    cooldownMax: rodadasParaVoltar,
+    cooldownAtual: rodadasParaVoltar,
+    usadoNaTurno: turnoAtual,   // posição na fila (1 = primeiro, 2 = segundo...)
+    usadoNaRodada: rodadaAtual,
+    disponivelNaTurno: turnoAtual,
+    disponivelNaRodada: rodadaAtual + rodadasParaVoltar
+  };
+}
+
+// Chamado quando CHEGA O TURNO do personagem dono do cooldown:
+// decrementa em 1 todos os seus cooldowns ativos
+function passarTurnoDoCooldown(cooldowns) {
+  return cooldowns.map(h => ({
+    ...h,
+    cooldownAtual: Math.max(0, (h.cooldownAtual || 0) - 1)
+  }));
+}
+
+// Compatibilidade: mantém passarRodadaCooldowns para fichas antigas sem fila de turnos
 function passarRodadaCooldowns(habilidades) {
   return habilidades.map(h => ({
     ...h,
     cooldownAtual: Math.max(0, (h.cooldownAtual || 0) - 1)
   }));
+}
+
+// Gera o texto descritivo do indicador visual de cooldown
+function textoIndicadorCooldown(cd) {
+  if (!cd.usadoNaRodada) return `${cd.cooldownAtual} turno${cd.cooldownAtual !== 1 ? "s" : ""} restante${cd.cooldownAtual !== 1 ? "s" : ""}`;
+  if (cd.cooldownAtual === 0) return "Disponível agora ✅";
+  return `Usada no Turno ${cd.usadoNaTurno} (Rodada ${cd.usadoNaRodada}) — disponível no Turno ${cd.disponivelNaTurno} (Rodada ${cd.disponivelNaRodada})`;
 }
 
 // --- Sistema de Tokens de Ego ---
@@ -146,7 +186,8 @@ export {
   calcularExecucaoAbsoluta, rolarJogada,
   calcDistanciaChute, calcDistanciaPasse, calcFolegoMaximo,
   calcLimiteTokensEgo, calcDJQuebraEgo,
-  passarRodadaCooldowns,
+  passarRodadaCooldowns, passarTurnoDoCooldown,
+  ativarCooldownHabilidade, textoIndicadorCooldown,
   aplicarResultadoJogadaTokens, verificarEgoInflado, verificarQuebraEgo,
   temVantagemSobre, CICLO_CORES
 };

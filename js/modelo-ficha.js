@@ -83,6 +83,13 @@ function criarCampanhaVazia({ nome, uidMestre, nomeMestre }) {
     codigoConvite: "", // preenchido externamente
     membros: [], // [{ uid, nome, fichaId }]
     rodadaAtual: 1,
+
+    // Sistema de turnos/iniciativa
+    combateAtivo: false,   // se true, está em modo turno a turno
+    filaTurnos: [],        // [{ uid, fichaId, nome, iniciativa, tipo: 'player'|'npc' }] ordenada por iniciativa desc
+    turnoAtualIndex: 0,    // índice do turno atual na filaTurnos
+    npcsIniciativa: [],    // [{ id, nome, iniciativa }] — NPCs digitados pelo Mestre
+
     criadoEm: Date.now(),
     atualizadoEm: Date.now()
   };

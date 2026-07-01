@@ -26,7 +26,7 @@ const CLASSES_PARTE2 = [
       nome: "Dribles de Rua", frase: "Finta... Fake... Vamos para a melhor jogada!",
       desc: "Avança 3m, Elástico com 2 Vantagens repetível por alvo encontrado. Ao fim, Chute Curvo com +1 Vantagem por driblado.",
       distancia: "3 m / Distância de Chute", cooldown: 6, duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Ação Comum + 3 Fôlegos", tipoVariavel: "fluxo",
-      bonus: { jogadaAlvo: "chute_curvo", vantagens: 2, bonusFixo: 0, condicao: "+1V no Chute Curvo por driblado" }
+      bonus: { jogadaAlvo: "elastico", vantagens: 2, bonusFixo: 0, condicao: "+1V no Chute Curvo por driblado (acumulável)" }
     },
     fluxo: {
       nome: "Gyro Ball", frase: "Um chute giratório impossível de prever.",

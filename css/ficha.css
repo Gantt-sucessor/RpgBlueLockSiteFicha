@@ -330,6 +330,12 @@
 .bonus-automatico-box ul { margin: 6px 0 0; padding-left: 18px; }
 .bonus-automatico-box li { margin-bottom: 2px; }
 
+.bonus-debuff-box {
+  background: #fde8e8;
+  border-color: #f5b8b8;
+}
+.bonus-debuff-box strong { color: var(--erro); }
+
 /* --- Seletor de cor compacto (dentro do modal de rolagem) --- */
 .seletor-cor-ego-compacto { gap: 6px; }
 .opcao-cor-ego-pequena {

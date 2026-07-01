@@ -48,7 +48,7 @@ const CLASSES_PARTE1 = [
       desc: "Faz Drible usando Destreza contra o alvo. Ganhando, avança 3m e pode driblar outro alvo com Destreza. Sem mais alvos, faz Voleio com +1 Vantagem por driblado no caminho.",
       distancia: "Corpo-a-Corpo / 3 m", cooldown: 5, duracao: "1D6 Rodadas", tipoAcao: "Ação Egoísta + Ação Comum + Reação",
       dadoDuracao: "1D6",
-      bonus: { jogadaAlvo: "voleio", vantagens: 1, bonusFixo: 0, condicao: "+1V por driblado no caminho" }
+      bonus: { jogadaAlvo: null, vantagens: 1, bonusFixo: 0, condicao: "+1V no Voleio por driblado (usa Destreza no drible)" }
     },
     semBola: {
       nome: "Armadilha", frase: "Achei que esse domínio seria mais difícil...",
@@ -161,7 +161,7 @@ const CLASSES_PARTE1 = [
       nome: "Presa Fraca", frase: "Você foi uma presa tão fácil.",
       desc: "Avanço de 4m em direção a quem tem a bola. Chegando, Roubo (ou Devorar) com 2 Vantagens e +3 de Bônus. Sucesso: Knuckleball com 3 Vantagens e +5 de Bônus.",
       distancia: "4 m", cooldown: "1 por Fluxo", duracao: "Instantâneo", tipoAcao: "Ação Egoísta + Ação Comum",
-      bonus: { jogadaAlvo: "knuckleball", vantagens: 3, bonusFixo: 5, condicao: "Após Roubo bem-sucedido" }
+      bonus: { jogadaAlvo: "roubo", vantagens: 2, bonusFixo: 3, condicao: "Se ganhar: Knuckleball com 3V/+5" }
     },
     porcentagensFluxo: [["Knuckleball + Gol", 25], ["Devorar", 10], ["Roubo", 5]]
   },

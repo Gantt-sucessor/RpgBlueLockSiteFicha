@@ -4,7 +4,7 @@
 
 import { garantirLogin } from "./firebase-config.js";
 import {
-  obterCampanha, escutarCampanha, passarRodada,
+  obterCampanha, escutarCampanha, passarRodada, voltarRodada, resetarRodadas,
   escutarFichasMultiplas, atualizarCampoFicha
 } from "./store.js";
 import { normalizarFicha } from "./modelo-ficha.js";
@@ -12,6 +12,7 @@ import { mostrarToast, copiarParaClipboard, escaparHtml } from "./ui-utils.js";
 import { passarRodadaCooldowns, calcFolegoMaximo, calcLimiteTokensEgo } from "./engine-regras.js";
 import { CLASSES } from "./data/classes-parte2.js";
 import { ESTAGIOS, COR_EGO_HEX } from "./data/regras-base.js";
+import "./tema.js";
 
 const params = new URLSearchParams(window.location.search);
 const campanhaId = params.get("campanha");
@@ -58,6 +59,8 @@ async function iniciar() {
   sincronizarListenerFichas();
 
   document.getElementById("btn-passar-rodada-mestre").addEventListener("click", aoClicarPassarRodada);
+  document.getElementById("btn-voltar-rodada").addEventListener("click", aoClicarVoltarRodada);
+  document.getElementById("btn-resetar-rodadas").addEventListener("click", aoClicarResetarRodadas);
 }
 
 function montarTopo() {
@@ -162,10 +165,9 @@ function renderizarUltimaRolagem(historico) {
 async function aoClicarPassarRodada() {
   const btn = document.getElementById("btn-passar-rodada-mestre");
   btn.disabled = true;
-  btn.textContent = "Passando rodada...";
+  btn.textContent = "Passando...";
 
   try {
-    // 1. Decrementa cooldowns de todas as fichas da campanha
     const membros = campanhaAtual.membros || [];
     const promessas = membros.map(async (membro) => {
       const fichaRaw = fichasAtuais[membro.fichaId];
@@ -175,17 +177,49 @@ async function aoClicarPassarRodada() {
       await atualizarCampoFicha(ficha.id, { cooldowns: novosCooldowns });
     });
     await Promise.all(promessas);
-
-    // 2. Avança o contador de rodada da campanha
     await passarRodada(campanhaId);
-
-    mostrarToast("Rodada avançada! Cooldowns de todos os jogadores foram descontados.", "sucesso");
+    mostrarToast("Rodada avançada! Cooldowns descontados.", "sucesso");
   } catch (err) {
     console.error(err);
-    mostrarToast("Erro ao passar a rodada. Veja o console.", "erro");
+    mostrarToast("Erro ao passar a rodada.", "erro");
   } finally {
     btn.disabled = false;
-    btn.textContent = "Passar Rodada";
+    btn.textContent = "Passar Rodada →";
+  }
+}
+
+async function aoClicarVoltarRodada() {
+  const rodadaAtual = campanhaAtual.rodadaAtual || 1;
+  if (rodadaAtual <= 1) {
+    mostrarToast("Já está na Rodada 1.", "aviso");
+    return;
+  }
+  const btn = document.getElementById("btn-voltar-rodada");
+  btn.disabled = true;
+  try {
+    await voltarRodada(campanhaId);
+    mostrarToast(`Voltou para a Rodada ${rodadaAtual - 1}.`, "sucesso");
+  } catch (err) {
+    console.error(err);
+    mostrarToast("Erro ao voltar rodada.", "erro");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function aoClicarResetarRodadas() {
+  const confirmar = window.confirm("Resetar para a Rodada 1? Os cooldowns dos jogadores não serão revertidos.");
+  if (!confirmar) return;
+  const btn = document.getElementById("btn-resetar-rodadas");
+  btn.disabled = true;
+  try {
+    await resetarRodadas(campanhaId);
+    mostrarToast("Rodadas resetadas para 1.", "sucesso");
+  } catch (err) {
+    console.error(err);
+    mostrarToast("Erro ao resetar rodadas.", "erro");
+  } finally {
+    btn.disabled = false;
   }
 }
 

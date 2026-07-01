@@ -96,6 +96,27 @@ async function passarRodada(campanhaId) {
   return novaRodada;
 }
 
+async function voltarRodada(campanhaId) {
+  const campanha = await obterCampanha(campanhaId);
+  if (!campanha) return;
+  const rodadaAtual = campanha.rodadaAtual || 1;
+  if (rodadaAtual <= 1) return 1; // não vai abaixo de 1
+  const novaRodada = rodadaAtual - 1;
+  await updateDoc(doc(db, COL_CAMPANHAS, campanhaId), {
+    rodadaAtual: novaRodada,
+    atualizadoEm: serverTimestamp()
+  });
+  return novaRodada;
+}
+
+async function resetarRodadas(campanhaId) {
+  await updateDoc(doc(db, COL_CAMPANHAS, campanhaId), {
+    rodadaAtual: 1,
+    atualizadoEm: serverTimestamp()
+  });
+  return 1;
+}
+
 async function listarCampanhasDoMestre(uid) {
   const q = query(collection(db, COL_CAMPANHAS), where("uidMestre", "==", uid));
   const snap = await getDocs(q);
@@ -159,7 +180,7 @@ async function excluirFicha(fichaId) {
 
 export {
   criarCampanha, buscarCampanhaPorCodigo, obterCampanha, escutarCampanha,
-  entrarNaCampanha, removerMembroCampanha, passarRodada, listarCampanhasDoMestre,
-  salvarFicha, atualizarCampoFicha, obterFicha, escutarFicha,
+  entrarNaCampanha, removerMembroCampanha, passarRodada, voltarRodada, resetarRodadas,
+  listarCampanhasDoMestre, salvarFicha, atualizarCampoFicha, obterFicha, escutarFicha,
   listarFichasDoUsuario, escutarFichasMultiplas, excluirFicha
 };

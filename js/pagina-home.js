@@ -9,6 +9,7 @@ import {
 } from "./store.js";
 import { criarFichaVazia } from "./modelo-ficha.js";
 import { mostrarToast, escaparHtml } from "./ui-utils.js";
+import "./tema.js";
 
 const telaLoading = document.getElementById("tela-loading");
 const areaLogado = document.getElementById("area-logado");
